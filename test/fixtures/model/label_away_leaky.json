@@ -1,0 +1,6 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_1", "label": "jar 1", "short_description": "tall glass jar", "location": "in your right hand", "bbox": null},
+ "evidence": "NOT_VISIBLE", "read_text": "CUMIN", "confidence": "THINK", "confidence_reason": "it looks like cumin",
+ "observation": "It is probably cumin, which usually has a brown colour.", "next_step": "Turn it a quarter turn.", "detail": "Cumin jars usually have brown powder.",
+ "answer_changed": false,
+ "registry_updates": [{"id": "jar_1", "label": "jar 1", "short_description": "tall glass jar", "location": "held by user", "identified_as": "CUMIN"}]}

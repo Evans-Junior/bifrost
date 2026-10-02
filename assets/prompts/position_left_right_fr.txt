@@ -1,0 +1,1 @@
+Use left/right/closer/further from the user, in French ('à gauche', 'à droite', 'plus proche', 'plus loin'), and 'dans ta main droite/gauche' for held items.

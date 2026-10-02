@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_1", "label": "jar 1", "short_description": "tall glass jar", "location": "in your right hand", "bbox": [0.4, 0.3, 0.2, 0.4]},
+ "evidence": "NOT_VISIBLE", "read_text": "", "confidence": "CANT_SEE", "confidence_reason": "the label faces away from the camera",
+ "observation": "", "next_step": "Turn it a quarter turn.", "detail": "",
+ "answer_changed": false, "registry_updates": []}

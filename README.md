@@ -1,0 +1,57 @@
+# BIFROST
+
+BIFROST is a voice-first assistant (iOS and Android) for blind and low-vision users. The full specification is in `../BIFROST_BUILD_PROMPT.md`.
+
+**Status:** Phase 1 (core voice loop) is complete.
+
+## Run
+
+```sh
+flutter pub get
+flutter run            # needs a real phone: camera, microphone and speech
+```
+
+On first launch, open **Settings** (gear icon, top right) and fill in:
+
+| Field | Example |
+|---|---|
+| Model base URL | `http://<lab-gpu>:8000/v1` (vLLM) or `https://openrouter.ai/api/v1` |
+| Model name | `Qwen/Qwen3.8-27B` (or the hosted provider's model ID) |
+| API key | Leave empty for a vLLM server without auth |
+| Reasoning effort | `off` (recommended) |
+| Timeout | 15 s |
+
+Settings are kept in `flutter_secure_storage`. The source code contains no secrets.
+
+**Using the app.** Hold anywhere on the camera view, ask "What is this?", then release. With VoiceOver or TalkBack on, double tap to start listening, then double tap again to send.
+
+## Edit wording without touching code
+
+| What | Where |
+|---|---|
+| System prompt, profile blocks, position styles, JSON schema, retry instruction | `assets/prompts/` |
+| Spoken templates, status lines, UI text (en + fr) | `lib/l10n/app_{en,fr}.arb`, then run `flutter gen-l10n` |
+
+## Develop
+
+```sh
+dart run build_runner build --delete-conflicting-outputs   # after editing freezed models
+flutter gen-l10n                                            # after editing .arb files
+flutter analyze
+flutter test
+```
+
+## Layout
+
+```
+lib/src/
+  settings/   AppSettings and the secure-storage repository
+  model/      response schema (freezed), parser, prompt builder, OpenAI-compatible streaming client
+  guards/     app-side guards (Phase 1: guards 1, 4 and 8)
+  speech/     speech-to-text, text-to-speech, template-based speech composer
+  camera/     rear camera only, stills are never stored
+  vision/     resize to 1024 px / JPEG 80 in an isolate
+  turn/       TurnPipeline (pure, tested with fixtures) and TurnController (device loop)
+  ui/         home screen (hold-to-talk) and Settings
+test/fixtures/model/   recorded model outputs used by the tests
+```

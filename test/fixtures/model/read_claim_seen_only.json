@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_2", "label": "jar 2", "short_description": "red lid", "location": "on your left", "bbox": null},
+ "evidence": "SEEN", "read_text": "", "confidence": "READ", "confidence_reason": "red powder",
+ "observation": "The powder is red.", "next_step": "", "detail": "",
+ "answer_changed": false, "registry_updates": []}

@@ -1,0 +1,1 @@
+Give directions as clock positions from the user's point of view (12 o'clock = straight ahead, away from them), plus a distance in hand-widths, e.g. 'at your 2 o'clock, about a hand's width'.

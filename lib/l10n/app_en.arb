@@ -1,0 +1,69 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "BIFROST",
+  "holdToTalk": "Hold to talk",
+  "holdToTalkHint": "Hold to ask, release to send. With a screen reader, double tap to start and double tap again to send.",
+  "cameraPreviewLabel": "Camera view, pointed at the objects in front of the phone.",
+  "openSettings": "Settings",
+
+  "statusReady": "Ready",
+  "statusListening": "Listening",
+  "statusChecking": "Checking",
+  "statusSpeaking": "Speaking",
+  "statusOffline": "Can't connect",
+  "statusNoCamera": "Camera unavailable",
+
+  "checking": "Checking…",
+  "timeout": "I couldn't get an answer. Try again.",
+  "lostTrack": "Sorry, I lost track. Ask again.",
+  "cannotConnect": "I can't connect to the server. Try again.",
+  "notConfigured": "The server is not set up yet. Open Settings to add it.",
+  "noCamera": "I can't use the camera right now.",
+  "noImage": "I couldn't take a picture. Try again.",
+  "didNotHear": "I didn't hear a question. Hold the button and speak.",
+  "noMicrophone": "I can't use the microphone right now.",
+
+  "referentFallback": "The item in front of the camera",
+  "referentWithLocation": "{label}, {location}.",
+  "@referentWithLocation": {
+    "placeholders": { "label": {"type": "String"}, "location": {"type": "String"} }
+  },
+  "referentOnly": "{label}.",
+  "@referentOnly": {
+    "placeholders": { "label": {"type": "String"} }
+  },
+  "confidenceRead": "I read it on the label.",
+  "confidenceThink": "I think so, because {reason}.",
+  "@confidenceThink": {
+    "placeholders": { "reason": {"type": "String"} }
+  },
+  "confidenceThinkNoReason": "I'm not fully sure.",
+  "cantSee": "I can't see enough to tell.",
+  "cantSeeDefaultAction": "Turn it slowly in your hand.",
+  "clarification": "{optionA} or {optionB}?",
+  "@clarification": {
+    "placeholders": { "optionA": {"type": "String"}, "optionB": {"type": "String"} }
+  },
+
+  "settingsTitle": "Settings",
+  "settingsServer": "Server",
+  "settingsBaseUrl": "Model base URL",
+  "settingsModelName": "Model name",
+  "settingsApiKey": "API key",
+  "settingsReasoning": "Reasoning effort",
+  "settingsTimeout": "Timeout in seconds",
+  "settingsVoice": "Voice and language",
+  "settingsLanguage": "Language",
+  "settingsSpeechRate": "Speech rate",
+  "settingsProfile": "Vision profile",
+  "settingsProfileBlind": "Blind",
+  "settingsProfileLowVision": "Low vision",
+  "settingsPositionStyle": "Position style",
+  "settingsPositionClock": "Clock face",
+  "settingsPositionLeftRight": "Left and right",
+  "settingsSave": "Save",
+  "settingsSaved": "Settings saved.",
+  "languageEnglish": "English",
+  "languageFrench": "Français"
+}

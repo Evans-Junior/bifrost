@@ -1,0 +1,6 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_1", "label": "jar 1", "short_description": "tall glass jar", "location": "in your right hand", "bbox": [0.4, 0.3, 0.2, 0.4]},
+ "evidence": "READ", "read_text": "CUMIN", "confidence": "READ", "confidence_reason": "",
+ "observation": "The label says cumin.", "next_step": "", "detail": "Ground cumin, 45 g.",
+ "answer_changed": false,
+ "registry_updates": [{"id": "jar_1", "label": "jar 1", "short_description": "tall glass jar", "location": "held by user", "identified_as": "CUMIN"}]}
