@@ -11,7 +11,19 @@ flutter pub get
 flutter run            # needs a real phone: camera, microphone and speech
 ```
 
-On first launch, open **Settings** (gear icon, top right) and fill in:
+### Quick start with the free hosted model (development only)
+
+```sh
+cp .env.example assets/env/.env     # already done if the file exists
+# put your OpenRouter key after API_KEY= in assets/env/.env
+flutter run
+```
+
+Any server value set in `assets/env/.env` overrides Settings, and the field is shown locked there. The file is git-ignored but is **bundled into the app at build time**, so rebuild after editing it, and never share a build that contains a key. Hosted servers receive the camera images, so use only test objects. Participant sessions must use the self-hosted server, built without this file.
+
+### Configure in the app instead
+
+Otherwise, open **Settings** (gear icon, top right) and fill in:
 
 | Field | Example |
 |---|---|

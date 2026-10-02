@@ -62,6 +62,7 @@
   "settingsPositionStyle": "Position style",
   "settingsPositionClock": "Clock face",
   "settingsPositionLeftRight": "Left and right",
+  "settingsFromEnv": "Set in the .env file",
   "settingsSave": "Save",
   "settingsSaved": "Settings saved.",
   "languageEnglish": "English",

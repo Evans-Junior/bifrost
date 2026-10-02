@@ -156,6 +156,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPositionLeftRight => 'Left and right';
 
   @override
+  String get settingsFromEnv => 'Set in the .env file';
+
+  @override
   String get settingsSave => 'Save';
 
   @override

@@ -2,14 +2,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'app_settings.dart';
+import 'env_defaults.dart';
 
 /// Loads and saves [AppSettings] in `flutter_secure_storage`, so the API key
-/// and server address never live in source code.
+/// and server address never live in source code. Server fields set in the
+/// development `.env` file ([EnvDefaults]) take priority over Settings.
 class SettingsRepository {
-  SettingsRepository([FlutterSecureStorage? storage])
-    : _storage = storage ?? const FlutterSecureStorage();
+  SettingsRepository({
+    FlutterSecureStorage? storage,
+    Future<Map<String, String>> Function()? envLoader,
+  })  : _storage = storage ?? const FlutterSecureStorage(),
+        _envLoader = envLoader ?? EnvDefaults.load;
 
   final FlutterSecureStorage _storage;
+  final Future<Map<String, String>> Function() _envLoader;
 
   static const _baseUrl = 'MODEL_BASE_URL';
   static const _modelName = 'MODEL_NAME';
@@ -21,19 +27,31 @@ class SettingsRepository {
   static const _profile = 'PROFILE';
   static const _positionStyle = 'POSITION_STYLE';
 
-  Future<AppSettings> load() async {
-    final all = await _storage.readAll();
+  Future<AppSettings> load() async =>
+      merge(await _storage.readAll(), await _envLoader());
+
+  /// Builds settings from [stored] values. Any server field present in [env]
+  /// overrides storage, so editing `.env` always takes effect.
+  static AppSettings merge(
+    Map<String, String> stored,
+    Map<String, String> env,
+  ) {
     const d = AppSettings();
+    String? pick(String key) {
+      final s = stored[key];
+      return env[key] ?? ((s != null && s.trim().isNotEmpty) ? s : null);
+    }
+
     return AppSettings(
-      modelBaseUrl: all[_baseUrl] ?? d.modelBaseUrl,
-      modelName: all[_modelName] ?? d.modelName,
-      apiKey: all[_apiKey] ?? d.apiKey,
-      reasoningEffort: ReasoningEffort.fromName(all[_reasoning]),
-      timeoutS: int.tryParse(all[_timeout] ?? '') ?? d.timeoutS,
-      language: AppLanguage.fromCode(all[_language]),
-      speechRate: double.tryParse(all[_speechRate] ?? '') ?? d.speechRate,
-      profile: VisionProfile.fromKey(all[_profile]),
-      positionStyle: PositionStyle.fromKey(all[_positionStyle]),
+      modelBaseUrl: pick(_baseUrl) ?? d.modelBaseUrl,
+      modelName: pick(_modelName) ?? d.modelName,
+      apiKey: pick(_apiKey) ?? d.apiKey,
+      reasoningEffort: ReasoningEffort.fromName(pick(_reasoning)),
+      timeoutS: int.tryParse(pick(_timeout) ?? '') ?? d.timeoutS,
+      language: AppLanguage.fromCode(stored[_language]),
+      speechRate: double.tryParse(stored[_speechRate] ?? '') ?? d.speechRate,
+      profile: VisionProfile.fromKey(stored[_profile]),
+      positionStyle: PositionStyle.fromKey(stored[_positionStyle]),
     );
   }
 
@@ -55,9 +73,15 @@ class SettingsRepository {
   }
 }
 
+/// Server values from the development `.env` file, empty when it is absent.
+final envDefaultsProvider =
+    FutureProvider<Map<String, String>>((ref) => EnvDefaults.load());
+
 /// Provides the [SettingsRepository].
 final settingsRepositoryProvider = Provider<SettingsRepository>(
-  (ref) => SettingsRepository(),
+  (ref) => SettingsRepository(
+    envLoader: () => ref.read(envDefaultsProvider.future),
+  ),
 );
 
 /// Holds the current [AppSettings] and persists changes.

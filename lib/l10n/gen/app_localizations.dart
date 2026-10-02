@@ -368,6 +368,12 @@ abstract class AppLocalizations {
   /// **'Left and right'**
   String get settingsPositionLeftRight;
 
+  /// No description provided for @settingsFromEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Set in the .env file'**
+  String get settingsFromEnv;
+
   /// No description provided for @settingsSave.
   ///
   /// In en, this message translates to:

@@ -159,6 +159,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsPositionLeftRight => 'Gauche et droite';
 
   @override
+  String get settingsFromEnv => 'Défini dans le fichier .env';
+
+  @override
   String get settingsSave => 'Enregistrer';
 
   @override

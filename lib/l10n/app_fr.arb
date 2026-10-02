@@ -50,6 +50,7 @@
   "settingsPositionStyle": "Style de position",
   "settingsPositionClock": "Cadran d'horloge",
   "settingsPositionLeftRight": "Gauche et droite",
+  "settingsFromEnv": "Défini dans le fichier .env",
   "settingsSave": "Enregistrer",
   "settingsSaved": "Réglages enregistrés.",
   "languageEnglish": "English",

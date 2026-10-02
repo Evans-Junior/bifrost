@@ -65,6 +65,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
     if (_draft == null) _initFrom(settings);
     final d = _draft!;
+    final env = ref.watch(envDefaultsProvider).value ?? const {};
+    String? envNote(String key) =>
+        env.containsKey(key) ? l10n.settingsFromEnv : null;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
@@ -113,16 +116,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           _Header(l10n.settingsServer),
           _Field(controller: _baseUrl, label: l10n.settingsBaseUrl,
-              keyboard: TextInputType.url),
-          _Field(controller: _modelName, label: l10n.settingsModelName),
+              keyboard: TextInputType.url,
+              lockedNote: envNote('MODEL_BASE_URL')),
+          _Field(controller: _modelName, label: l10n.settingsModelName,
+              lockedNote: envNote('MODEL_NAME')),
           _Field(controller: _apiKey, label: l10n.settingsApiKey,
-              obscure: true),
+              obscure: true, lockedNote: envNote('API_KEY')),
           _Field(controller: _timeout, label: l10n.settingsTimeout,
-              keyboard: TextInputType.number),
+              keyboard: TextInputType.number,
+              lockedNote: envNote('TIMEOUT_S')),
           _Choice<ReasoningEffort>(
             label: l10n.settingsReasoning,
             value: d.reasoningEffort,
             options: {for (final r in ReasoningEffort.values) r: r.name},
+            lockedNote: envNote('REASONING_EFFORT'),
             onChanged: (v) =>
                 setState(() => _draft = d.copyWith(reasoningEffort: v)),
           ),
@@ -155,31 +162,36 @@ class _Header extends StatelessWidget {
       );
 }
 
-/// A labelled text field.
+/// A labelled text field. When [lockedNote] is set the value comes from
+/// `.env`, so the field is read-only and says why.
 class _Field extends StatelessWidget {
   const _Field({
     required this.controller,
     required this.label,
     this.obscure = false,
     this.keyboard,
+    this.lockedNote,
   });
 
   final TextEditingController controller;
   final String label;
   final bool obscure;
   final TextInputType? keyboard;
+  final String? lockedNote;
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: TextField(
           controller: controller,
+          enabled: lockedNote == null,
           obscureText: obscure,
           autocorrect: false,
           keyboardType: keyboard,
           style: const TextStyle(fontSize: 18),
           decoration: InputDecoration(
             labelText: label,
+            helperText: lockedNote,
             border: const OutlineInputBorder(),
           ),
         ),
@@ -193,12 +205,16 @@ class _Choice<T> extends StatelessWidget {
     required this.value,
     required this.options,
     required this.onChanged,
+    this.lockedNote,
   });
 
   final String label;
   final T value;
   final Map<T, String> options;
   final ValueChanged<T> onChanged;
+
+  /// When set, the value comes from `.env` and cannot be changed here.
+  final String? lockedNote;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -207,15 +223,18 @@ class _Choice<T> extends StatelessWidget {
           initialValue: value,
           decoration: InputDecoration(
             labelText: label,
+            helperText: lockedNote,
             border: const OutlineInputBorder(),
           ),
           items: [
             for (final e in options.entries)
               DropdownMenuItem(value: e.key, child: Text(e.value)),
           ],
-          onChanged: (v) {
-            if (v != null) onChanged(v);
-          },
+          onChanged: lockedNote != null
+              ? null
+              : (v) {
+                  if (v != null) onChanged(v);
+                },
         ),
       );
 }
