@@ -17,7 +17,9 @@ import '../settings/app_settings.dart';
 import '../settings/settings_repository.dart';
 import '../speech/stt_service.dart';
 import '../speech/tts_service.dart';
+import '../logging/turn_logger.dart';
 import '../vision/image_prep.dart';
+import '../vision/sample_image.dart';
 import '../vision/ocr_service.dart';
 import 'turn_pipeline.dart';
 
@@ -96,6 +98,9 @@ final conversationEngineProvider = FutureProvider<ConversationEngine>((
   );
 });
 
+/// Writes turn logs for this app session.
+final turnLoggerProvider = Provider<TurnLogger>((ref) => TurnLogger());
+
 /// Runs the voice loop: hold to talk, classify, answer locally or capture
 /// and ask the model, speak the guarded answer. Only one turn is in flight;
 /// a new press cancels the current turn and any speech.
@@ -141,17 +146,22 @@ class TurnController extends Notifier<TurnState> {
     _held = false;
     if (state.status != TurnStatus.listening) return;
     final id = _turnId;
+    final released = DateTime.now();
     final settings = await ref.read(settingsProvider.future);
     state = state.copyWith(status: TurnStatus.checking);
     final transcript = (await _stt.stop()).trim();
     if (id != _turnId) return;
     if (transcript.isEmpty) return _say(_l10n(settings).didNotHear, settings);
-    await handleTranscript(transcript);
+    await handleTranscript(transcript, releasedAt: released);
   }
 
   /// Handles one utterance. Also used to type a question in the simulator,
   /// where there is no microphone.
-  Future<void> handleTranscript(String transcript) async {
+  Future<void> handleTranscript(
+    String transcript, {
+    DateTime? releasedAt,
+  }) async {
+    final times = TurnTimes(releasedAt ?? DateTime.now());
     final id = ++_turnId;
     _cancel?.cancel('new utterance');
     await _tts.stop();
@@ -169,7 +179,9 @@ class TurnController extends Notifier<TurnState> {
 
     Future<void>? checkingSpeech;
     final checkingTimer = Timer(checkingDelay, () {
-      if (id == _turnId) checkingSpeech = _tts.speak(l10n.checking);
+      if (id != _turnId) return;
+      times.firstAudio ??= DateTime.now();
+      checkingSpeech = _tts.speak(l10n.checking);
     });
     _cancel = CancelToken();
     final reply = await engine.handle(
@@ -179,6 +191,7 @@ class TurnController extends Notifier<TurnState> {
       capture: _capture,
       cancel: _cancel,
     );
+    times.fullAnswer = DateTime.now();
     checkingTimer.cancel();
     if (id != _turnId || reply.text.isEmpty) return;
     await checkingSpeech;
@@ -186,6 +199,7 @@ class TurnController extends Notifier<TurnState> {
 
     _logReply(transcript, reply);
     if (reply.outcome?.isSuccess ?? false) await HapticFeedback.lightImpact();
+    times.firstAudio ??= DateTime.now();
     await _say(
       reply.text,
       settings,
@@ -193,12 +207,29 @@ class TurnController extends Notifier<TurnState> {
           ? TurnStatus.offline
           : TurnStatus.ready,
     );
+    times.speechEnd = DateTime.now();
+    final logger = ref.read(turnLoggerProvider);
+    await logger.write(
+      logger.entry(
+        transcript: transcript,
+        reply: reply,
+        state: engine.state,
+        settings: settings,
+        times: times,
+      ),
+      settings,
+    );
   }
 
   /// Captures a still, resizes it off the UI isolate and runs OCR on the
   /// exact image the model will see.
   Future<CapturedFrame?> _capture() async {
-    final still = await _camera.captureStill();
+    final still =
+        await _camera.captureStill() ??
+        // Simulator only: no camera, so use a generated labelled jar.
+        (kDebugMode && !_camera.isReady
+            ? await SampleImage.jar('CUMIN')
+            : null);
     if (still == null) return null;
     final image = await ImagePrep.prepare(still);
     final ocr = await ref

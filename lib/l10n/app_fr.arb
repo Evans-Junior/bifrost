@@ -67,5 +67,10 @@
   "repeatNone": "Je n'ai encore rien dit.",
   "stopped": "D'accord, j'arrête.",
   "watchNotReady": "Le mode surveillance n'est pas encore disponible.",
-  "itemNoun": "objet"
+  "itemNoun": "objet",
+  "settingsStudy": "Étude",
+  "settingsParticipant": "Code du participant",
+  "settingsLogServer": "URL du serveur de journaux",
+  "serverBusy": "Le serveur est occupé. Réessaie dans un instant.",
+  "statusNoItems": "Aucun objet étiqueté pour l'instant. Demande-moi ce qu'il y a devant toi."
 }

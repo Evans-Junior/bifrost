@@ -160,5 +160,10 @@
   "repeatNone": "I haven't said anything yet.",
   "stopped": "Stopped.",
   "watchNotReady": "Watch mode isn't available yet.",
-  "itemNoun": "item"
+  "itemNoun": "item",
+  "settingsStudy": "Study",
+  "settingsParticipant": "Participant code",
+  "settingsLogServer": "Log server URL",
+  "serverBusy": "The server is busy. Try again in a moment.",
+  "statusNoItems": "No items labelled yet. Ask me what's in front of you."
 }

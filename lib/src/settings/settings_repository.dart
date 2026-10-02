@@ -26,6 +26,9 @@ class SettingsRepository {
   static const _speechRate = 'SPEECH_RATE';
   static const _profile = 'PROFILE';
   static const _positionStyle = 'POSITION_STYLE';
+  static const _logServerUrl = 'LOG_SERVER_URL';
+  static const _logToken = 'LOG_TOKEN';
+  static const _participant = 'PARTICIPANT';
 
   Future<AppSettings> load() async =>
       merge(await _storage.readAll(), await _envLoader());
@@ -52,6 +55,9 @@ class SettingsRepository {
       speechRate: double.tryParse(stored[_speechRate] ?? '') ?? d.speechRate,
       profile: VisionProfile.fromKey(stored[_profile]),
       positionStyle: PositionStyle.fromKey(stored[_positionStyle]),
+      logServerUrl: pick(_logServerUrl) ?? d.logServerUrl,
+      logToken: pick(_logToken) ?? d.logToken,
+      participant: pick(_participant) ?? d.participant,
     );
   }
 
@@ -66,6 +72,9 @@ class SettingsRepository {
       _speechRate: '${s.speechRate}',
       _profile: s.profile.assetKey,
       _positionStyle: s.positionStyle.assetKey,
+      _logServerUrl: s.logServerUrl.trim(),
+      _logToken: s.logToken,
+      _participant: s.participant.trim(),
     };
     for (final e in values.entries) {
       await _storage.write(key: e.key, value: e.value);

@@ -77,6 +77,9 @@ class AppSettings {
     this.speechRate = 0.5,
     this.profile = VisionProfile.blind,
     this.positionStyle = PositionStyle.leftRight,
+    this.logServerUrl = '',
+    this.logToken = '',
+    this.participant = 'dev',
   });
 
   final String modelBaseUrl;
@@ -90,6 +93,15 @@ class AppSettings {
   final double speechRate;
   final VisionProfile profile;
   final PositionStyle positionStyle;
+
+  /// Where turn logs are sent (the bifrost_logs server). Empty = local only.
+  final String logServerUrl;
+
+  /// Optional bearer token the log server expects.
+  final String logToken;
+
+  /// Participant code recorded in every log entry.
+  final String participant;
 
   /// True when the app has enough to call a model server.
   bool get isServerConfigured =>
@@ -105,6 +117,9 @@ class AppSettings {
     double? speechRate,
     VisionProfile? profile,
     PositionStyle? positionStyle,
+    String? logServerUrl,
+    String? logToken,
+    String? participant,
   }) {
     return AppSettings(
       modelBaseUrl: modelBaseUrl ?? this.modelBaseUrl,
@@ -116,6 +131,9 @@ class AppSettings {
       speechRate: speechRate ?? this.speechRate,
       profile: profile ?? this.profile,
       positionStyle: positionStyle ?? this.positionStyle,
+      logServerUrl: logServerUrl ?? this.logServerUrl,
+      logToken: logToken ?? this.logToken,
+      participant: participant ?? this.participant,
     );
   }
 }

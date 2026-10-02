@@ -246,4 +246,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get itemNoun => 'item';
+
+  @override
+  String get settingsStudy => 'Study';
+
+  @override
+  String get settingsParticipant => 'Participant code';
+
+  @override
+  String get settingsLogServer => 'Log server URL';
+
+  @override
+  String get serverBusy => 'The server is busy. Try again in a moment.';
+
+  @override
+  String get statusNoItems =>
+      'No items labelled yet. Ask me what\'s in front of you.';
 }

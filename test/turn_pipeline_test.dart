@@ -97,6 +97,13 @@ void main() {
       expect(o.spokenText, l10nFor('en').cannotConnect);
     });
 
+    test('rate limit says the server is busy, not offline', () async {
+      final client = FakeModelClient([ModelBusyException('HTTP 429')]);
+      final o = await _pipeline(client).run(testSettings, askInput());
+      expect(o.failure, TurnFailure.busy);
+      expect(o.spokenText, l10nFor('en').serverBusy);
+    });
+
     test('French settings give French status lines', () async {
       final client = FakeModelClient(['x', 'y']);
       final o = await _pipeline(

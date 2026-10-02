@@ -20,11 +20,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _modelName = TextEditingController();
   final _apiKey = TextEditingController();
   final _timeout = TextEditingController();
+  final _logServer = TextEditingController();
+  final _participant = TextEditingController();
   AppSettings? _draft;
 
   @override
   void dispose() {
-    for (final c in [_baseUrl, _modelName, _apiKey, _timeout]) {
+    for (final c in [
+      _baseUrl,
+      _modelName,
+      _apiKey,
+      _timeout,
+      _logServer,
+      _participant,
+    ]) {
       c.dispose();
     }
     super.dispose();
@@ -36,6 +45,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _modelName.text = s.modelName;
     _apiKey.text = s.apiKey;
     _timeout.text = '${s.timeoutS}';
+    _logServer.text = s.logServerUrl;
+    _participant.text = s.participant;
   }
 
   Future<void> _save(AppLocalizations l10n) async {
@@ -44,6 +55,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       modelName: _modelName.text,
       apiKey: _apiKey.text,
       timeoutS: int.tryParse(_timeout.text)?.clamp(3, 120) ?? 15,
+      logServerUrl: _logServer.text,
+      participant: _participant.text,
     );
     await ref.read(settingsProvider.notifier).save(draft);
     if (!mounted) return;
@@ -146,6 +159,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             lockedNote: envNote('REASONING_EFFORT'),
             onChanged: (v) =>
                 setState(() => _draft = d.copyWith(reasoningEffort: v)),
+          ),
+          _Header(l10n.settingsStudy),
+          _Field(
+            controller: _participant,
+            label: l10n.settingsParticipant,
+            lockedNote: envNote('PARTICIPANT'),
+          ),
+          _Field(
+            controller: _logServer,
+            label: l10n.settingsLogServer,
+            keyboard: TextInputType.url,
+            lockedNote: envNote('LOG_SERVER_URL'),
           ),
           const SizedBox(height: 24),
           FilledButton(

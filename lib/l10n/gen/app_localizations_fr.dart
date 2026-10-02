@@ -251,4 +251,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get itemNoun => 'objet';
+
+  @override
+  String get settingsStudy => 'Étude';
+
+  @override
+  String get settingsParticipant => 'Code du participant';
+
+  @override
+  String get settingsLogServer => 'URL du serveur de journaux';
+
+  @override
+  String get serverBusy => 'Le serveur est occupé. Réessaie dans un instant.';
+
+  @override
+  String get statusNoItems =>
+      'Aucun objet étiqueté pour l\'instant. Demande-moi ce qu\'il y a devant toi.';
 }

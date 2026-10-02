@@ -31,8 +31,15 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>BIFROST uses the rear camera to see the objects in front of you. Images are not stored.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>BIFROST sends turn logs to the study computer on this network.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>BIFROST listens while you hold the talk button.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

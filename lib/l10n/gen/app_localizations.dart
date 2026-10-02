@@ -505,6 +505,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'item'**
   String get itemNoun;
+
+  /// No description provided for @settingsStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get settingsStudy;
+
+  /// No description provided for @settingsParticipant.
+  ///
+  /// In en, this message translates to:
+  /// **'Participant code'**
+  String get settingsParticipant;
+
+  /// No description provided for @settingsLogServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Log server URL'**
+  String get settingsLogServer;
+
+  /// No description provided for @serverBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'The server is busy. Try again in a moment.'**
+  String get serverBusy;
+
+  /// No description provided for @statusNoItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No items labelled yet. Ask me what\'s in front of you.'**
+  String get statusNoItems;
 }
 
 class _AppLocalizationsDelegate

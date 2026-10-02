@@ -15,6 +15,17 @@ class ModelConnectionException implements Exception {
   String toString() => 'ModelConnectionException: $message';
 }
 
+/// Thrown when the server is reachable but refuses for now (HTTP 429 or
+/// 503), e.g. a rate-limited free tier.
+class ModelBusyException implements Exception {
+  ModelBusyException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'ModelBusyException: $message';
+}
+
 /// Sends chat requests to the vision-language model.
 abstract class ModelClient {
   /// Streams text deltas of the model's reply. Cancelled through [cancel].
@@ -91,7 +102,13 @@ class OpenAiCompatibleClient implements ModelClient {
       );
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) rethrow;
-      throw ModelConnectionException(e.message ?? e.type.name);
+      final status = e.response?.statusCode;
+      if (status == 429 || status == 503) {
+        throw ModelBusyException('HTTP $status');
+      }
+      throw ModelConnectionException(
+        status != null ? 'HTTP $status' : (e.message ?? e.type.name),
+      );
     }
 
     final lines = response.data!.stream
@@ -130,8 +147,11 @@ class SseChatDecoder {
   static String? _deltaContent(String data) {
     try {
       final json = jsonDecode(data) as Map<String, dynamic>;
-      if (json['error'] != null) {
-        throw ModelConnectionException('${json['error']}');
+      final error = json['error'];
+      if (error != null) {
+        final code = error is Map ? error['code'] : null;
+        if (code == 429 || code == 503) throw ModelBusyException('$error');
+        throw ModelConnectionException('$error');
       }
       final choices = json['choices'] as List?;
       if (choices == null || choices.isEmpty) return null;

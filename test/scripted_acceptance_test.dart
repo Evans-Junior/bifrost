@@ -307,6 +307,14 @@ void main() {
       expect(s.client.requests, isEmpty);
     });
 
+    test('status right after starting a task with nothing labelled', () async {
+      await s.say('Help me sort these.', fixture: 's07_clarify.json');
+      expect(
+        (await s.say("What's left?")).text,
+        startsWith('No items labelled yet.'),
+      );
+    });
+
     test('status before any task', () async {
       expect((await s.say("What's left?")).text, startsWith('No task yet.'));
     });

@@ -16,6 +16,9 @@ class EnvDefaults {
     'API_KEY',
     'REASONING_EFFORT',
     'TIMEOUT_S',
+    'LOG_SERVER_URL',
+    'LOG_TOKEN',
+    'PARTICIPANT',
   ];
 
   /// Loads the file if present. Returns an empty map when it is missing.

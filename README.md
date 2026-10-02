@@ -2,7 +2,7 @@
 
 BIFROST is a voice-first assistant (iOS and Android) for blind and low-vision users. The full specification is in `../BIFROST_BUILD_PROMPT.md`.
 
-**Status:** Phase 1 (core voice loop) is complete.
+**Status:** Phases 1 and 2 are complete, plus on-device OCR and the OCR cross-check (guard 2), brought forward from Phase 3.
 
 ## Run
 
@@ -37,12 +37,32 @@ Settings are kept in `flutter_secure_storage`. The source code contains no secre
 
 **Using the app.** Hold anywhere on the camera view, ask "What is this?", then release. With VoiceOver or TalkBack on, double tap to start listening, then double tap again to send.
 
+## Turn logs
+
+Each turn is written to a JSON Lines file on the phone and sent to the log server in `../bifrost_logs`, which also holds the React viewer. To use it, set `LOG_SERVER_URL` (in `.env` or Settings). Logs contain text and timings only; images are never logged.
+
+## Run on the iOS simulator
+
+The simulator has no camera or microphone. In debug builds the app works around this in two ways:
+- It uses a generated photo of a jar labelled CUMIN, so OCR and the model still have an image to work with.
+- It shows a **Type a question (debug)** box under the hold-to-talk area.
+
+To play a short scripted conversation automatically, run:
+
+```sh
+flutter run -d <simulator> --dart-define=BIFROST_DEMO=true
+```
+
+ML Kit has no arm64 simulator build, so simulator builds are x86_64 and run under Rosetta (this is set in the Podfile). Builds for real phones are not affected.
+
 ## Edit wording without touching code
 
 | What | Where |
 |---|---|
 | System prompt, profile blocks, position styles, JSON schema, retry instruction | `assets/prompts/` |
 | Spoken templates, status lines, UI text (en + fr) | `lib/l10n/app_{en,fr}.arb`, then run `flutter gen-l10n` |
+| Intent phrases (en + fr) | `assets/intents/{en,fr}.json` |
+| Sight-assuming phrases removed by guard 7 | `assets/guards/banned_phrases.json` |
 
 ## Develop
 

@@ -42,6 +42,16 @@ void main() {
       expect(text, '{"a": 1}');
     });
 
+    test('rate-limit error event throws busy', () async {
+      final lines = Stream.value(
+        'data: {"error": {"code": 429, "message": "rate-limited upstream"}}',
+      );
+      expect(
+        SseChatDecoder.decode(lines).join(),
+        throwsA(isA<ModelBusyException>()),
+      );
+    });
+
     test('server error event throws a connection error', () async {
       final lines = Stream.value('data: {"error": {"message": "overloaded"}}');
       expect(

@@ -42,6 +42,7 @@ class EngineReply {
     this.outcome,
     this.confidence,
     this.isClarification = false,
+    this.ocrTokens = const [],
   });
 
   /// Text to speak (may be empty when a turn was cancelled).
@@ -52,6 +53,9 @@ class EngineReply {
   final TurnOutcome? outcome;
   final Confidence? confidence;
   final bool isClarification;
+
+  /// Normalized words on-device OCR found in the still, for the log.
+  final List<String> ocrTokens;
 
   bool get usedModel => outcome != null;
 }
@@ -137,6 +141,7 @@ class ConversationEngine {
       outcome: outcome,
       confidence: outcome.reply?.confidence,
       isClarification: outcome.reply?.isClarification ?? false,
+      ocrTokens: frame.ocr.tokens.toList(),
     );
   }
 
@@ -151,6 +156,9 @@ class ConversationEngine {
     }
     final done = task.done(registry);
     final left = task.left(registry);
+    if (done.isEmpty && left.isEmpty) {
+      return [...parts, l10n.statusNoItems].join(' ');
+    }
     parts.add(
       done.isEmpty
           ? l10n.statusNothingDone

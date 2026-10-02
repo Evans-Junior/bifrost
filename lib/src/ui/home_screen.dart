@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,6 +49,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Future<void> _openCamera() async {
     final ok = await _turns.startCamera();
     if (mounted) setState(() => _cameraReady = ok);
+    if (_runDemo) {
+      _runDemo = false;
+      await _demo();
+    }
+  }
+
+  /// Debug only: `--dart-define=BIFROST_DEMO=true` types a short scripted
+  /// conversation through the real pipeline, for simulators without a
+  /// microphone.
+  static const _demoEnabled = bool.fromEnvironment('BIFROST_DEMO');
+  bool _runDemo = kDebugMode && _demoEnabled;
+
+  Future<void> _demo() async {
+    const script = [
+      'Help me sort these spices.',
+      "What's this?",
+      "Are you sure it's not paprika?",
+      'What have I done so far?',
+      'Say that again',
+    ];
+    for (final line in script) {
+      await Future<void>.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      await _turns.handleTranscript(line);
+    }
   }
 
   /// Screen-reader double tap toggles listening.
@@ -98,6 +124,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
             ),
             _LastReply(text: turn.lastSpoken),
+            // Debug builds only: type a question when there is no microphone
+            // (the iOS simulator).
+            if (kDebugMode) _TypeQuestion(onSend: _turns.handleTranscript),
           ],
         ),
       ),
@@ -223,6 +252,62 @@ class _LastReply extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Text(text, style: const TextStyle(fontSize: 22)),
+    );
+  }
+}
+
+/// Debug-only text box that sends a typed question through the same
+/// pipeline as speech.
+class _TypeQuestion extends StatefulWidget {
+  const _TypeQuestion({required this.onSend});
+
+  final Future<void> Function(String) onSend;
+
+  @override
+  State<_TypeQuestion> createState() => _TypeQuestionState();
+}
+
+class _TypeQuestionState extends State<_TypeQuestion> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _send() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    _controller.clear();
+    widget.onSend(text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              textInputAction: TextInputAction.send,
+              onSubmitted: (_) => _send(),
+              decoration: const InputDecoration(
+                labelText: 'Type a question (debug)',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Send',
+            icon: const Icon(Icons.send),
+            onPressed: _send,
+          ),
+        ],
+      ),
     );
   }
 }
