@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:bifrost/l10n/gen/app_localizations.dart';
+import 'package:bifrost/src/conversation/object_registry.dart';
+import 'package:bifrost/src/guards/guards.dart';
+import 'package:bifrost/src/intent/intent_classifier.dart';
 import 'package:bifrost/src/model/model_client.dart';
 import 'package:bifrost/src/model/prompt_builder.dart';
 import 'package:bifrost/src/model/response_parser.dart';
 import 'package:bifrost/src/model/vlm_response.dart';
 import 'package:bifrost/src/settings/app_settings.dart';
+import 'package:bifrost/src/turn/turn_pipeline.dart';
+import 'package:bifrost/src/vision/ocr_result.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 
@@ -66,3 +72,38 @@ const testContext = TurnContext(
   intent: 'ASK',
   imageBase64Jpeg: 'AAAA',
 );
+
+/// Guards 1 then 4, the response-level guards that need no context.
+VlmResponse basicGuards(Guards g, VlmResponse r, List<GuardEvent> log) =>
+    g.noGuessFilling(g.confidenceConsistency(r, log), log);
+
+/// OCR that read exactly [lines].
+OcrResult ocrOf(List<String> lines) => OcrResult([
+  for (final l in lines)
+    OcrLine(l, left: 0.4, top: 0.4, width: 0.2, height: 0.1),
+]);
+
+/// A pipeline input for an ASK turn with a fresh registry.
+TurnInput askInput({
+  OcrResult ocr = OcrResult.empty,
+  TurnContext context = testContext,
+}) => TurnInput(
+  context: context,
+  intent: IntentType.ask,
+  registry: ObjectRegistry(),
+  ocr: ocr,
+);
+
+/// Reads an intents file from disk.
+IntentClassifier classifierFor(String code) => IntentClassifier.fromJson(
+  jsonDecode(File('assets/intents/$code.json').readAsStringSync())
+      as Map<String, dynamic>,
+);
+
+/// Reads a JSON fixture (OCR, scripts) from `test/fixtures/`.
+dynamic jsonFixture(String path) =>
+    jsonDecode(File('test/fixtures/$path').readAsStringSync());
+
+/// Reads a fixture file from `test/fixtures/` as text.
+String jsonFixtureText(String path) =>
+    File('test/fixtures/$path').readAsStringSync();

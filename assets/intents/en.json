@@ -1,0 +1,212 @@
+{
+  "_comment": "Rules are checked top to bottom; the first match wins. Matching ignores case, accents and punctuation. 'phrases' match whole words anywhere in the utterance; 'patterns' are regular expressions on the normalized text (lowercase, no accents, punctuation as spaces). Named groups become slots: goal, n.",
+  "numbers": {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "eleven": 11,
+    "twelve": 12,
+    "first": 1,
+    "second": 2,
+    "third": 3,
+    "fourth": 4,
+    "fifth": 5
+  },
+  "relation_words": {
+    "left": [
+      "left"
+    ],
+    "right": [
+      "right"
+    ],
+    "closer": [
+      "closer",
+      "closest",
+      "near",
+      "nearer",
+      "front"
+    ],
+    "further": [
+      "further",
+      "farther",
+      "far",
+      "back",
+      "behind"
+    ]
+  },
+  "rules": [
+    {
+      "intent": "STOP",
+      "phrases": [
+        "stop",
+        "cancel",
+        "never mind",
+        "nevermind",
+        "be quiet",
+        "shush"
+      ]
+    },
+    {
+      "intent": "REPEAT",
+      "phrases": [
+        "say that again",
+        "say it again",
+        "repeat that",
+        "repeat",
+        "what did you say",
+        "come again"
+      ]
+    },
+    {
+      "intent": "MORE",
+      "phrases": [
+        "more detail",
+        "more details",
+        "tell me more",
+        "more information",
+        "more info",
+        "go on"
+      ]
+    },
+    {
+      "intent": "STATUS",
+      "phrases": [
+        "what have i done",
+        "what did i do",
+        "what s left",
+        "what is left",
+        "what remains",
+        "how many left",
+        "how many are left",
+        "what have we done",
+        "where am i at"
+      ]
+    },
+    {
+      "intent": "WATCH",
+      "phrases": [
+        "tell me when you can read",
+        "let me know when you can read",
+        "keep looking",
+        "keep watching"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "sort",
+      "phrases": [
+        "help me sort",
+        "sort these",
+        "sort the",
+        "sort my",
+        "help me organize",
+        "organize these"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "find",
+      "patterns": [
+        "\\b(?:find|help me find|where is|where are|look for|looking for|i lost|i can t find|cant find) my (?<goal>.+)$"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "match",
+      "phrases": [
+        "does this match",
+        "do these match",
+        "does this go with",
+        "do these go together",
+        "help me match",
+        "what goes with"
+      ]
+    },
+    {
+      "intent": "CHALLENGE",
+      "phrases": [
+        "are you sure",
+        "you sure",
+        "are you certain",
+        "is it really",
+        "is that really",
+        "really",
+        "i think it s",
+        "i think it is",
+        "i think that s",
+        "that s wrong",
+        "that s not right",
+        "you re wrong",
+        "no it s",
+        "no that s"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "other",
+      "phrases": [
+        "the other one",
+        "the other",
+        "not that one",
+        "no the other"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "left",
+      "phrases": [
+        "the left one",
+        "the one on the left",
+        "on the left",
+        "the leftmost"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "right",
+      "phrases": [
+        "the right one",
+        "the one on the right",
+        "on the right",
+        "the rightmost"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "closer",
+      "phrases": [
+        "the closer one",
+        "the closest one",
+        "the nearer one",
+        "the near one",
+        "the front one",
+        "closer one"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "further",
+      "phrases": [
+        "the further one",
+        "the farther one",
+        "the far one",
+        "the back one",
+        "further one"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "patterns": [
+        "\\b(?:item|jar|number|bottle|box|can|object|thing|shirt|sock|pair|key) (?<n>\\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\\b",
+        "^(?:the )?(?<n>first|second|third|fourth|fifth)(?: one)?$"
+      ]
+    }
+  ]
+}

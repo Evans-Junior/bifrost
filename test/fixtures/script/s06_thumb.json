@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_5", "label": "jar 5", "short_description": "tall jar, yellow lid", "location": "in your left hand", "bbox": [0.42, 0.35, 0.18, 0.30]},
+ "evidence": "READ", "read_text": "TUR", "confidence": "THINK", "confidence_reason": "your thumb covers part of the label",
+ "observation": "The label starts with T U R.", "next_step": "Move your thumb and I'll confirm.", "detail": "", "answer_changed": false,
+ "registry_updates": []}

@@ -58,7 +58,9 @@ class SttService {
     if (cached != null) return cached;
     final available = (await _stt.locales()).map((l) => l.localeId);
     final picked = LocalePicker.pick(wanted, available) ?? wanted;
-    if (picked != wanted) debugPrint('[stt] $wanted unavailable, using $picked');
+    if (picked != wanted) {
+      debugPrint('[stt] $wanted unavailable, using $picked');
+    }
     return _resolved[wanted] = picked;
   }
 

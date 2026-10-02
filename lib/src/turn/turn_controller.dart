@@ -8,12 +8,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../camera/camera_service.dart';
 import '../model/model_client.dart';
+import '../conversation/conversation_engine.dart';
+import '../guards/banned_phrases.dart';
+import '../guards/guards.dart';
+import '../intent/intent_classifier.dart';
 import '../model/prompt_builder.dart';
 import '../settings/app_settings.dart';
 import '../settings/settings_repository.dart';
 import '../speech/stt_service.dart';
 import '../speech/tts_service.dart';
 import '../vision/image_prep.dart';
+import '../vision/ocr_service.dart';
 import 'turn_pipeline.dart';
 
 /// What the app is doing right now. Announced to screen readers (rule 12).
@@ -25,25 +30,24 @@ class TurnState {
   const TurnState({
     this.status = TurnStatus.ready,
     this.lastSpoken = '',
-    this.lastDetail = '',
+    this.lastTranscript = '',
   });
 
   final TurnStatus status;
   final String lastSpoken;
 
-  /// Detail held back for MORE (answered locally from Phase 2).
-  final String lastDetail;
+  /// What the user last said, shown on screen for researchers.
+  final String lastTranscript;
 
   TurnState copyWith({
     TurnStatus? status,
     String? lastSpoken,
-    String? lastDetail,
-  }) =>
-      TurnState(
-        status: status ?? this.status,
-        lastSpoken: lastSpoken ?? this.lastSpoken,
-        lastDetail: lastDetail ?? this.lastDetail,
-      );
+    String? lastTranscript,
+  }) => TurnState(
+    status: status ?? this.status,
+    lastSpoken: lastSpoken ?? this.lastSpoken,
+    lastTranscript: lastTranscript ?? this.lastTranscript,
+  );
 }
 
 /// Provides the rear camera.
@@ -60,20 +64,41 @@ final sttServiceProvider = Provider<SttService>((ref) => SttService());
 final ttsServiceProvider = Provider<TtsService>((ref) => TtsService());
 
 /// Provides the model client.
-final modelClientProvider =
-    Provider<ModelClient>((ref) => OpenAiCompatibleClient());
-
-/// Provides the turn pipeline.
-final turnPipelineProvider = Provider<TurnPipeline>(
-  (ref) => TurnPipeline(
-    client: ref.watch(modelClientProvider),
-    prompts: PromptBuilder(BundlePromptAssets()),
-  ),
+final modelClientProvider = Provider<ModelClient>(
+  (ref) => OpenAiCompatibleClient(),
 );
 
-/// Runs the Phase 1 voice loop: hold to talk, capture, ask the model,
-/// speak the guarded answer. Only one turn is in flight; a new press
-/// cancels the current turn and any speech.
+/// Provides on-device OCR.
+final ocrServiceProvider = Provider<OcrService>((ref) {
+  final service = OcrService();
+  ref.onDispose(service.close);
+  return service;
+});
+
+/// Intent rules for a language code (`en`, `fr`).
+final intentClassifierProvider =
+    FutureProvider.family<IntentClassifier, String>(
+      (ref, code) => IntentClassifier.load(code),
+    );
+
+/// The conversation engine, with guards loaded from assets. Kept for the
+/// whole session so the registry and task memory persist.
+final conversationEngineProvider = FutureProvider<ConversationEngine>((
+  ref,
+) async {
+  final banned = await BannedPhrases.load();
+  return ConversationEngine(
+    TurnPipeline(
+      client: ref.watch(modelClientProvider),
+      prompts: PromptBuilder(BundlePromptAssets()),
+      guards: Guards(banned: banned),
+    ),
+  );
+});
+
+/// Runs the voice loop: hold to talk, classify, answer locally or capture
+/// and ask the model, speak the guarded answer. Only one turn is in flight;
+/// a new press cancels the current turn and any speech.
 class TurnController extends Notifier<TurnState> {
   /// Speak "checking…" if nothing has been said this long after release.
   static const checkingDelay = Duration(milliseconds: 1500);
@@ -81,7 +106,6 @@ class TurnController extends Notifier<TurnState> {
   CancelToken? _cancel;
   int _turnId = 0;
   bool _held = false;
-  final List<PastTurn> _history = [];
 
   CameraService get _camera => ref.read(cameraServiceProvider);
   SttService get _stt => ref.read(sttServiceProvider);
@@ -112,86 +136,84 @@ class TurnController extends Notifier<TurnState> {
     if (!_held) await pressEnd();
   }
 
-  /// Hold-to-talk released: take the transcript and run a turn.
+  /// Hold-to-talk released: take the transcript and handle it.
   Future<void> pressEnd() async {
     _held = false;
     if (state.status != TurnStatus.listening) return;
     final id = _turnId;
     final settings = await ref.read(settingsProvider.future);
-    final l10n = _l10n(settings);
     state = state.copyWith(status: TurnStatus.checking);
     final transcript = (await _stt.stop()).trim();
     if (id != _turnId) return;
-    if (transcript.isEmpty) return _say(l10n.didNotHear, settings);
-    if (!settings.isServerConfigured) {
-      return _say(l10n.notConfigured, settings);
-    }
-    await _runTurn(id, transcript, settings, l10n);
+    if (transcript.isEmpty) return _say(_l10n(settings).didNotHear, settings);
+    await handleTranscript(transcript);
   }
 
-  Future<void> _runTurn(
-    int id,
-    String transcript,
-    AppSettings settings,
-    AppLocalizations l10n,
-  ) async {
+  /// Handles one utterance. Also used to type a question in the simulator,
+  /// where there is no microphone.
+  Future<void> handleTranscript(String transcript) async {
+    final id = ++_turnId;
+    _cancel?.cancel('new utterance');
+    await _tts.stop();
+    final settings = await ref.read(settingsProvider.future);
+    final l10n = _l10n(settings);
+    final engine = await ref.read(conversationEngineProvider.future);
+    final classifier = await ref.read(
+      intentClassifierProvider(settings.language.code).future,
+    );
+    state = state.copyWith(
+      status: TurnStatus.checking,
+      lastTranscript: transcript,
+    );
     await _tts.configure(settings.language, settings.speechRate);
+
     Future<void>? checkingSpeech;
     final checkingTimer = Timer(checkingDelay, () {
       if (id == _turnId) checkingSpeech = _tts.speak(l10n.checking);
     });
-
-    final still = await _camera.captureStill();
-    if (still == null) {
-      checkingTimer.cancel();
-      return _say(_camera.isReady ? l10n.noImage : l10n.noCamera, settings);
-    }
-    final image = await ImagePrep.toModelJpegBase64(still);
-    if (id != _turnId) return checkingTimer.cancel();
-
     _cancel = CancelToken();
-    final outcome = await ref.read(turnPipelineProvider).run(
-          settings,
-          TurnContext(
-            transcript: transcript,
-            intent: 'ASK',
-            imageBase64Jpeg: image,
-            recentTurns: List.of(_history),
-          ),
-          cancel: _cancel,
-        );
+    final reply = await engine.handle(
+      transcript: transcript,
+      settings: settings,
+      classifier: classifier,
+      capture: _capture,
+      cancel: _cancel,
+    );
     checkingTimer.cancel();
-    if (id != _turnId || outcome.failure == TurnFailure.cancelled) return;
+    if (id != _turnId || reply.text.isEmpty) return;
     await checkingSpeech;
     if (id != _turnId) return;
 
-    _logOutcome(transcript, outcome);
-    if (outcome.isSuccess) {
-      _history.add(PastTurn(user: transcript, assistant: outcome.spokenText));
-      await HapticFeedback.lightImpact();
-    }
+    _logReply(transcript, reply);
+    if (reply.outcome?.isSuccess ?? false) await HapticFeedback.lightImpact();
     await _say(
-      outcome.spokenText,
+      reply.text,
       settings,
-      detail: outcome.reply?.detail ?? '',
-      after: outcome.failure == TurnFailure.connection
+      after: reply.outcome?.failure == TurnFailure.connection
           ? TurnStatus.offline
           : TurnStatus.ready,
     );
   }
 
+  /// Captures a still, resizes it off the UI isolate and runs OCR on the
+  /// exact image the model will see.
+  Future<CapturedFrame?> _capture() async {
+    final still = await _camera.captureStill();
+    if (still == null) return null;
+    final image = await ImagePrep.prepare(still);
+    final ocr = await ref
+        .read(ocrServiceProvider)
+        .readJpeg(image.jpeg, image.width, image.height);
+    return CapturedFrame(image.base64, ocr);
+  }
+
   Future<void> _say(
     String text,
     AppSettings settings, {
-    String detail = '',
     TurnStatus after = TurnStatus.ready,
   }) async {
     final id = _turnId;
-    state = TurnState(
-      status: TurnStatus.speaking,
-      lastSpoken: text,
-      lastDetail: detail,
-    );
+    state = state.copyWith(status: TurnStatus.speaking, lastSpoken: text);
     await _tts.configure(settings.language, settings.speechRate);
     await _tts.speak(text);
     if (id == _turnId) state = state.copyWith(status: after);
@@ -200,13 +222,16 @@ class TurnController extends Notifier<TurnState> {
   AppLocalizations _l10n(AppSettings s) =>
       lookupAppLocalizations(s.language.locale);
 
-  /// Temporary console log until turn logging lands in Phase 5.
-  void _logOutcome(String transcript, TurnOutcome o) {
-    debugPrint('[turn] "$transcript" -> "${o.spokenText}" '
-        'failure=${o.failure} guards=${o.guardEvents}');
+  /// Console log; the uploaded turn log is added separately.
+  void _logReply(String transcript, EngineReply r) {
+    debugPrint(
+      '[turn] "$transcript" ${r.intent} -> "${r.text}" '
+      'failure=${r.outcome?.failure} guards=${r.outcome?.guardEvents}',
+    );
   }
 }
 
 /// The app-wide turn controller.
-final turnControllerProvider =
-    NotifierProvider<TurnController, TurnState>(TurnController.new);
+final turnControllerProvider = NotifierProvider<TurnController, TurnState>(
+  TurnController.new,
+);

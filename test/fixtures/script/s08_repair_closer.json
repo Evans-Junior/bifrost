@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_4", "label": "jar 4", "short_description": "short jar, green lid", "location": "closer to you, on the right", "bbox": [0.55, 0.5, 0.15, 0.35]},
+ "evidence": "READ", "read_text": "OREGANO", "confidence": "READ", "confidence_reason": "",
+ "observation": "Yes, the label says oregano.", "next_step": "", "detail": "", "answer_changed": false,
+ "registry_updates": [{"id": "jar_4", "label": "jar 4", "identified_as": "OREGANO"}]}

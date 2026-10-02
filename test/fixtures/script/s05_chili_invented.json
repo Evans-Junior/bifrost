@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_3", "label": "jar 3", "short_description": "tall jar, white lid", "location": "in front of you", "bbox": [0.45, 0.3, 0.15, 0.4]},
+ "evidence": "READ", "read_text": "CHILI", "confidence": "READ", "confidence_reason": "",
+ "observation": "The label says chili.", "next_step": "", "detail": "", "answer_changed": false,
+ "registry_updates": [{"id": "jar_3", "label": "jar 3", "identified_as": "CHILI"}]}

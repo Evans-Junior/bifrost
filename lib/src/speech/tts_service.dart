@@ -21,14 +21,12 @@ class TtsService {
       if (Platform.isIOS) {
         // Speak through the loudspeaker even after the microphone was used.
         await _tts.setSharedInstance(true);
-        await _tts.setIosAudioCategory(
-          IosTextToSpeechAudioCategory.playAndRecord,
-          [
-            IosTextToSpeechAudioCategoryOptions.defaultToSpeaker,
-            IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-            IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-          ],
-        );
+        await _tts
+            .setIosAudioCategory(IosTextToSpeechAudioCategory.playAndRecord, [
+              IosTextToSpeechAudioCategoryOptions.defaultToSpeaker,
+              IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+              IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+            ]);
       }
       _configured = true;
     }
@@ -51,7 +49,9 @@ class TtsService {
       debugPrint('[tts] no voice for $wanted on this device');
       return wanted;
     }
-    if (picked != wanted) debugPrint('[tts] $wanted unavailable, using $picked');
+    if (picked != wanted) {
+      debugPrint('[tts] $wanted unavailable, using $picked');
+    }
     return picked;
   }
 

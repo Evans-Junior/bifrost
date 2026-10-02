@@ -11,8 +11,8 @@ class SettingsRepository {
   SettingsRepository({
     FlutterSecureStorage? storage,
     Future<Map<String, String>> Function()? envLoader,
-  })  : _storage = storage ?? const FlutterSecureStorage(),
-        _envLoader = envLoader ?? EnvDefaults.load;
+  }) : _storage = storage ?? const FlutterSecureStorage(),
+       _envLoader = envLoader ?? EnvDefaults.load;
 
   final FlutterSecureStorage _storage;
   final Future<Map<String, String>> Function() _envLoader;
@@ -74,14 +74,14 @@ class SettingsRepository {
 }
 
 /// Server values from the development `.env` file, empty when it is absent.
-final envDefaultsProvider =
-    FutureProvider<Map<String, String>>((ref) => EnvDefaults.load());
+final envDefaultsProvider = FutureProvider<Map<String, String>>(
+  (ref) => EnvDefaults.load(),
+);
 
 /// Provides the [SettingsRepository].
 final settingsRepositoryProvider = Provider<SettingsRepository>(
-  (ref) => SettingsRepository(
-    envLoader: () => ref.read(envDefaultsProvider.future),
-  ),
+  (ref) =>
+      SettingsRepository(envLoader: () => ref.read(envDefaultsProvider.future)),
 );
 
 /// Holds the current [AppSettings] and persists changes.

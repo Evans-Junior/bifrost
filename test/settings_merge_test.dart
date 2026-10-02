@@ -45,7 +45,9 @@ void main() {
 
   test('user preferences are never taken from .env', () {
     final s = SettingsRepository.merge(
-        {'LANGUAGE': 'fr'}, {...env, 'LANGUAGE': 'en'});
+      {'LANGUAGE': 'fr'},
+      {...env, 'LANGUAGE': 'en'},
+    );
     expect(s.language, AppLanguage.fr);
   });
 }

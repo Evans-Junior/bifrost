@@ -172,4 +172,83 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get languageFrench => 'Français';
+
+  @override
+  String get reasonLabelHardToRead => 'l\'étiquette est difficile à lire';
+
+  @override
+  String challengeStillRead(String text) {
+    return 'Je lis toujours $text sur celui-ci.';
+  }
+
+  @override
+  String challengeStillThink(String identity) {
+    return 'Je pense toujours que c\'est $identity.';
+  }
+
+  @override
+  String challengeChanged(String text) {
+    return 'Maintenant, je lis $text. Ma réponse d\'avant était fausse.';
+  }
+
+  @override
+  String taskRegistered(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count objets, numérotés de gauche à droite.',
+      one: '1 objet.',
+      zero: 'Je ne vois encore aucun objet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusNoTask =>
+      'Aucune tâche en cours. Tu peux dire : aide-moi à trier.';
+
+  @override
+  String statusFinding(String goal) {
+    return 'Je cherche : $goal.';
+  }
+
+  @override
+  String statusDone(String items) {
+    return 'Fait : $items.';
+  }
+
+  @override
+  String statusLeft(String items) {
+    return 'Reste : $items.';
+  }
+
+  @override
+  String get statusNothingDone => 'Rien de fait pour l\'instant.';
+
+  @override
+  String get statusNothingLeft => 'Il ne reste rien. Tout est fait.';
+
+  @override
+  String statusItem(String label, String identity) {
+    return '$label : $identity';
+  }
+
+  @override
+  String get listAnd => 'et';
+
+  @override
+  String get moreNone => 'Je n\'ai pas d\'autres détails.';
+
+  @override
+  String get repeatNone => 'Je n\'ai encore rien dit.';
+
+  @override
+  String get stopped => 'D\'accord, j\'arrête.';
+
+  @override
+  String get watchNotReady =>
+      'Le mode surveillance n\'est pas encore disponible.';
+
+  @override
+  String get itemNoun => 'objet';
 }

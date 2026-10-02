@@ -397,6 +397,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Français'**
   String get languageFrench;
+
+  /// No description provided for @reasonLabelHardToRead.
+  ///
+  /// In en, this message translates to:
+  /// **'the label is hard to read'**
+  String get reasonLabelHardToRead;
+
+  /// No description provided for @challengeStillRead.
+  ///
+  /// In en, this message translates to:
+  /// **'I still read {text} on this one.'**
+  String challengeStillRead(String text);
+
+  /// No description provided for @challengeStillThink.
+  ///
+  /// In en, this message translates to:
+  /// **'I still think it\'s {identity}.'**
+  String challengeStillThink(String identity);
+
+  /// No description provided for @challengeChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Now I read {text}. I was wrong before.'**
+  String challengeChanged(String text);
+
+  /// No description provided for @taskRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{I don\'t see any items yet.} =1{1 item.} other{{count} items, numbered from left to right.}}'**
+  String taskRegistered(int count);
+
+  /// No description provided for @statusNoTask.
+  ///
+  /// In en, this message translates to:
+  /// **'No task yet. You can say: help me sort these.'**
+  String get statusNoTask;
+
+  /// No description provided for @statusFinding.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for {goal}.'**
+  String statusFinding(String goal);
+
+  /// No description provided for @statusDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done: {items}.'**
+  String statusDone(String items);
+
+  /// No description provided for @statusLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left: {items}.'**
+  String statusLeft(String items);
+
+  /// No description provided for @statusNothingDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing done yet.'**
+  String get statusNothingDone;
+
+  /// No description provided for @statusNothingLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing left. All done.'**
+  String get statusNothingLeft;
+
+  /// No description provided for @statusItem.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} is {identity}'**
+  String statusItem(String label, String identity);
+
+  /// No description provided for @listAnd.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get listAnd;
+
+  /// No description provided for @moreNone.
+  ///
+  /// In en, this message translates to:
+  /// **'I have no more detail.'**
+  String get moreNone;
+
+  /// No description provided for @repeatNone.
+  ///
+  /// In en, this message translates to:
+  /// **'I haven\'t said anything yet.'**
+  String get repeatNone;
+
+  /// No description provided for @stopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped.'**
+  String get stopped;
+
+  /// No description provided for @watchNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch mode isn\'t available yet.'**
+  String get watchNotReady;
+
+  /// No description provided for @itemNoun.
+  ///
+  /// In en, this message translates to:
+  /// **'item'**
+  String get itemNoun;
 }
 
 class _AppLocalizationsDelegate

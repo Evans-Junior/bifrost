@@ -112,19 +112,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             label: d.speechRate.toStringAsFixed(1),
             semanticFormatterCallback: (v) =>
                 '${l10n.settingsSpeechRate} ${v.toStringAsFixed(1)}',
-            onChanged: (v) => setState(() => _draft = d.copyWith(speechRate: v)),
+            onChanged: (v) =>
+                setState(() => _draft = d.copyWith(speechRate: v)),
           ),
           _Header(l10n.settingsServer),
-          _Field(controller: _baseUrl, label: l10n.settingsBaseUrl,
-              keyboard: TextInputType.url,
-              lockedNote: envNote('MODEL_BASE_URL')),
-          _Field(controller: _modelName, label: l10n.settingsModelName,
-              lockedNote: envNote('MODEL_NAME')),
-          _Field(controller: _apiKey, label: l10n.settingsApiKey,
-              obscure: true, lockedNote: envNote('API_KEY')),
-          _Field(controller: _timeout, label: l10n.settingsTimeout,
-              keyboard: TextInputType.number,
-              lockedNote: envNote('TIMEOUT_S')),
+          _Field(
+            controller: _baseUrl,
+            label: l10n.settingsBaseUrl,
+            keyboard: TextInputType.url,
+            lockedNote: envNote('MODEL_BASE_URL'),
+          ),
+          _Field(
+            controller: _modelName,
+            label: l10n.settingsModelName,
+            lockedNote: envNote('MODEL_NAME'),
+          ),
+          _Field(
+            controller: _apiKey,
+            label: l10n.settingsApiKey,
+            obscure: true,
+            lockedNote: envNote('API_KEY'),
+          ),
+          _Field(
+            controller: _timeout,
+            label: l10n.settingsTimeout,
+            keyboard: TextInputType.number,
+            lockedNote: envNote('TIMEOUT_S'),
+          ),
           _Choice<ReasoningEffort>(
             label: l10n.settingsReasoning,
             value: d.reasoningEffort,
@@ -137,7 +151,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           FilledButton(
             style: FilledButton.styleFrom(minimumSize: const Size(0, 64)),
             onPressed: () => _save(l10n),
-            child: Text(l10n.settingsSave, style: const TextStyle(fontSize: 22)),
+            child: Text(
+              l10n.settingsSave,
+              style: const TextStyle(fontSize: 22),
+            ),
           ),
         ],
       ),
@@ -153,13 +170,15 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 16, bottom: 8),
-        child: Semantics(
-          header: true,
-          child: Text(text,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        ),
-      );
+    padding: const EdgeInsets.only(top: 16, bottom: 8),
+    child: Semantics(
+      header: true,
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    ),
+  );
 }
 
 /// A labelled text field. When [lockedNote] is set the value comes from
@@ -181,21 +200,21 @@ class _Field extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: TextField(
-          controller: controller,
-          enabled: lockedNote == null,
-          obscureText: obscure,
-          autocorrect: false,
-          keyboardType: keyboard,
-          style: const TextStyle(fontSize: 18),
-          decoration: InputDecoration(
-            labelText: label,
-            helperText: lockedNote,
-            border: const OutlineInputBorder(),
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 12),
+    child: TextField(
+      controller: controller,
+      enabled: lockedNote == null,
+      obscureText: obscure,
+      autocorrect: false,
+      keyboardType: keyboard,
+      style: const TextStyle(fontSize: 18),
+      decoration: InputDecoration(
+        labelText: label,
+        helperText: lockedNote,
+        border: const OutlineInputBorder(),
+      ),
+    ),
+  );
 }
 
 /// A labelled drop-down choice.
@@ -218,23 +237,23 @@ class _Choice<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: DropdownButtonFormField<T>(
-          initialValue: value,
-          decoration: InputDecoration(
-            labelText: label,
-            helperText: lockedNote,
-            border: const OutlineInputBorder(),
-          ),
-          items: [
-            for (final e in options.entries)
-              DropdownMenuItem(value: e.key, child: Text(e.value)),
-          ],
-          onChanged: lockedNote != null
-              ? null
-              : (v) {
-                  if (v != null) onChanged(v);
-                },
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 12),
+    child: DropdownButtonFormField<T>(
+      initialValue: value,
+      decoration: InputDecoration(
+        labelText: label,
+        helperText: lockedNote,
+        border: const OutlineInputBorder(),
+      ),
+      items: [
+        for (final e in options.entries)
+          DropdownMenuItem(value: e.key, child: Text(e.value)),
+      ],
+      onChanged: lockedNote != null
+          ? null
+          : (v) {
+              if (v != null) onChanged(v);
+            },
+    ),
+  );
 }

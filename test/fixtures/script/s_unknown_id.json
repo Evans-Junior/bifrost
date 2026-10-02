@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "bottle_9", "label": "bottle 9", "short_description": "small glass bottle", "location": "behind jar 3", "bbox": null},
+ "evidence": "SEEN", "read_text": "", "confidence": "THINK", "confidence_reason": "it has a dropper cap",
+ "observation": "It is a small glass bottle.", "next_step": "", "detail": "", "answer_changed": false,
+ "registry_updates": [{"id": "bottle_9", "label": "bottle 9", "short_description": "small glass bottle", "location": "behind jar 3", "identified_as": ""}]}

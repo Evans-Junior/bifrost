@@ -1,19 +1,16 @@
 {
   "@@locale": "en",
-
   "appTitle": "BIFROST",
   "holdToTalk": "Hold to talk",
   "holdToTalkHint": "Hold to ask, release to send. With a screen reader, double tap to start and double tap again to send.",
   "cameraPreviewLabel": "Camera view, pointed at the objects in front of the phone.",
   "openSettings": "Settings",
-
   "statusReady": "Ready",
   "statusListening": "Listening",
   "statusChecking": "Checking",
   "statusSpeaking": "Speaking",
   "statusOffline": "Can't connect",
   "statusNoCamera": "Camera unavailable",
-
   "checking": "Checking…",
   "timeout": "I couldn't get an answer. Try again.",
   "lostTrack": "Sorry, I lost track. Ask again.",
@@ -23,29 +20,49 @@
   "noImage": "I couldn't take a picture. Try again.",
   "didNotHear": "I didn't hear a question. Hold the button and speak.",
   "noMicrophone": "I can't use the microphone right now.",
-
   "referentFallback": "The item in front of the camera",
   "referentWithLocation": "{label}, {location}.",
   "@referentWithLocation": {
-    "placeholders": { "label": {"type": "String"}, "location": {"type": "String"} }
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "location": {
+        "type": "String"
+      }
+    }
   },
   "referentOnly": "{label}.",
   "@referentOnly": {
-    "placeholders": { "label": {"type": "String"} }
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
   },
   "confidenceRead": "I read it on the label.",
   "confidenceThink": "I think so, because {reason}.",
   "@confidenceThink": {
-    "placeholders": { "reason": {"type": "String"} }
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   },
   "confidenceThinkNoReason": "I'm not fully sure.",
   "cantSee": "I can't see enough to tell.",
   "cantSeeDefaultAction": "Turn it slowly in your hand.",
   "clarification": "{optionA} or {optionB}?",
   "@clarification": {
-    "placeholders": { "optionA": {"type": "String"}, "optionB": {"type": "String"} }
+    "placeholders": {
+      "optionA": {
+        "type": "String"
+      },
+      "optionB": {
+        "type": "String"
+      }
+    }
   },
-
   "settingsTitle": "Settings",
   "settingsServer": "Server",
   "settingsBaseUrl": "Model base URL",
@@ -66,5 +83,82 @@
   "settingsSave": "Save",
   "settingsSaved": "Settings saved.",
   "languageEnglish": "English",
-  "languageFrench": "Français"
+  "languageFrench": "Français",
+  "reasonLabelHardToRead": "the label is hard to read",
+  "challengeStillRead": "I still read {text} on this one.",
+  "@challengeStillRead": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeStillThink": "I still think it's {identity}.",
+  "@challengeStillThink": {
+    "placeholders": {
+      "identity": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeChanged": "Now I read {text}. I was wrong before.",
+  "@challengeChanged": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "taskRegistered": "{count, plural, =0{I don't see any items yet.} =1{1 item.} other{{count} items, numbered from left to right.}}",
+  "@taskRegistered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statusNoTask": "No task yet. You can say: help me sort these.",
+  "statusFinding": "Looking for {goal}.",
+  "@statusFinding": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "statusDone": "Done: {items}.",
+  "@statusDone": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "statusLeft": "Left: {items}.",
+  "@statusLeft": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "statusNothingDone": "Nothing done yet.",
+  "statusNothingLeft": "Nothing left. All done.",
+  "statusItem": "{label} is {identity}",
+  "@statusItem": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "identity": {
+        "type": "String"
+      }
+    }
+  },
+  "listAnd": "and",
+  "moreNone": "I have no more detail.",
+  "repeatNone": "I haven't said anything yet.",
+  "stopped": "Stopped.",
+  "watchNotReady": "Watch mode isn't available yet.",
+  "itemNoun": "item"
 }

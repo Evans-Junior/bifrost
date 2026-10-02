@@ -169,4 +169,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageFrench => 'Français';
+
+  @override
+  String get reasonLabelHardToRead => 'the label is hard to read';
+
+  @override
+  String challengeStillRead(String text) {
+    return 'I still read $text on this one.';
+  }
+
+  @override
+  String challengeStillThink(String identity) {
+    return 'I still think it\'s $identity.';
+  }
+
+  @override
+  String challengeChanged(String text) {
+    return 'Now I read $text. I was wrong before.';
+  }
+
+  @override
+  String taskRegistered(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items, numbered from left to right.',
+      one: '1 item.',
+      zero: 'I don\'t see any items yet.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statusNoTask => 'No task yet. You can say: help me sort these.';
+
+  @override
+  String statusFinding(String goal) {
+    return 'Looking for $goal.';
+  }
+
+  @override
+  String statusDone(String items) {
+    return 'Done: $items.';
+  }
+
+  @override
+  String statusLeft(String items) {
+    return 'Left: $items.';
+  }
+
+  @override
+  String get statusNothingDone => 'Nothing done yet.';
+
+  @override
+  String get statusNothingLeft => 'Nothing left. All done.';
+
+  @override
+  String statusItem(String label, String identity) {
+    return '$label is $identity';
+  }
+
+  @override
+  String get listAnd => 'and';
+
+  @override
+  String get moreNone => 'I have no more detail.';
+
+  @override
+  String get repeatNone => 'I haven\'t said anything yet.';
+
+  @override
+  String get stopped => 'Stopped.';
+
+  @override
+  String get watchNotReady => 'Watch mode isn\'t available yet.';
+
+  @override
+  String get itemNoun => 'item';
 }

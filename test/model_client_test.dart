@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers.dart';
 
-String _chunk(String content) => 'data: ${jsonEncode({
+String _chunk(String content) =>
+    'data: ${jsonEncode({
       'choices': [
         {
           'delta': {'content': content},
@@ -43,8 +44,10 @@ void main() {
 
     test('server error event throws a connection error', () async {
       final lines = Stream.value('data: {"error": {"message": "overloaded"}}');
-      expect(SseChatDecoder.decode(lines).join(),
-          throwsA(isA<ModelConnectionException>()));
+      expect(
+        SseChatDecoder.decode(lines).join(),
+        throwsA(isA<ModelConnectionException>()),
+      );
     });
   });
 
@@ -65,7 +68,9 @@ void main() {
 
     test('reasoning low sends reasoning_effort', () {
       final body = OpenAiCompatibleClient.requestBody(
-          testSettings.copyWith(reasoningEffort: ReasoningEffort.low), []);
+        testSettings.copyWith(reasoningEffort: ReasoningEffort.low),
+        [],
+      );
       expect(body['reasoning_effort'], 'low');
       expect(body.containsKey('chat_template_kwargs'), isFalse);
     });

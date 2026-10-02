@@ -1,0 +1,5 @@
+{"needs_clarification": false, "clarification_options": [],
+ "referent": {"id": "jar_1", "label": "jar 1", "short_description": "tall jar, black lid", "location": "on your far left", "bbox": null},
+ "evidence": "SEEN", "read_text": "", "confidence": "THINK", "confidence_reason": "the powder is dark",
+ "observation": "As you can see, the lid is black.", "next_step": "Check the label to be sure. Turn it toward me.", "detail": "", "answer_changed": false,
+ "registry_updates": []}

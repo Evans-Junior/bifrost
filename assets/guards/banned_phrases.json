@@ -1,0 +1,42 @@
+{
+  "_comment": "Guard 7. Sight-assuming wording removed from model text before it is spoken (rule 10). 'strip' removes just the phrase; 'drop_sentence' removes the whole sentence that contains it. Case-insensitive.",
+  "strip": [
+    "as you can see",
+    "as you can clearly see",
+    "you can see that",
+    "as shown",
+    "if you look closely",
+    "if you look",
+    "comme tu peux le voir",
+    "comme vous pouvez le voir",
+    "comme on peut le voir",
+    "tu peux voir que",
+    "vous pouvez voir que",
+    "si tu regardes bien",
+    "si tu regardes"
+  ],
+  "drop_sentence": [
+    "check the label",
+    "take a look",
+    "have a look",
+    "look closely",
+    "see for yourself",
+    "you can see",
+    "vérifie l'étiquette",
+    "vérifiez l'étiquette",
+    "jette un coup d'œil",
+    "jetez un coup d'œil",
+    "jette un œil",
+    "lis l'étiquette",
+    "tu peux voir",
+    "vous pouvez voir",
+    "look at the label",
+    "look at it",
+    "regarde l'étiquette",
+    "regarde le",
+    "regarde la",
+    "regarde bien",
+    "regardez l'étiquette",
+    "regardez bien"
+  ]
+}

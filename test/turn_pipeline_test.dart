@@ -20,7 +20,9 @@ void main() {
         final client = FakeModelClient([
           modelFixture('labelled_jar_read.json'),
         ]);
-        final o = await _pipeline(client).run(testSettings, testContext);
+        final o = await _pipeline(
+          client,
+        ).run(testSettings, askInput(ocr: ocrOf(['CUMIN', 'Ground 45 g'])));
         expect(o.isSuccess, isTrue);
         expect(o.spokenText, startsWith('Jar 1, in your right hand.'));
         expect(o.spokenText, contains(l10nFor('en').confidenceRead));
@@ -33,7 +35,7 @@ void main() {
         'label_away_leaky.json',
       ]) {
         final client = FakeModelClient([modelFixture(fixture)]);
-        final o = await _pipeline(client).run(testSettings, testContext);
+        final o = await _pipeline(client).run(testSettings, askInput());
         expect(o.response!.confidence, Confidence.cantSee, reason: fixture);
         expect(o.spokenText, startsWith('Jar 1'), reason: fixture);
         expect(o.spokenText, contains("I can't see"), reason: fixture);
@@ -60,7 +62,7 @@ void main() {
         modelFixture('invalid_truncated.txt'),
         modelFixture('labelled_jar_read.json'),
       ]);
-      final o = await _pipeline(client).run(testSettings, testContext);
+      final o = await _pipeline(client).run(testSettings, askInput());
       expect(o.isSuccess, isTrue);
       expect(client.requests, hasLength(2));
       expect(client.requests[1].last['content'], 'Return only valid JSON.');
@@ -69,7 +71,7 @@ void main() {
 
     test('invalid JSON twice says "lost track"', () async {
       final client = FakeModelClient(['nope', 'still nope']);
-      final o = await _pipeline(client).run(testSettings, testContext);
+      final o = await _pipeline(client).run(testSettings, askInput());
       expect(o.failure, TurnFailure.lostTrack);
       expect(o.spokenText, 'Sorry, I lost track. Ask again.');
       expect(client.requests, hasLength(2));
@@ -83,14 +85,14 @@ void main() {
       ], delay: const Duration(seconds: 3));
       final o = await _pipeline(
         client,
-      ).run(testSettings.copyWith(timeoutS: 1), testContext);
+      ).run(testSettings.copyWith(timeoutS: 1), askInput());
       expect(o.failure, TurnFailure.timeout);
       expect(o.spokenText, "I couldn't get an answer. Try again.");
     });
 
     test('connection error says it cannot connect', () async {
       final client = FakeModelClient([ModelConnectionException('refused')]);
-      final o = await _pipeline(client).run(testSettings, testContext);
+      final o = await _pipeline(client).run(testSettings, askInput());
       expect(o.failure, TurnFailure.connection);
       expect(o.spokenText, l10nFor('en').cannotConnect);
     });
@@ -99,7 +101,7 @@ void main() {
       final client = FakeModelClient(['x', 'y']);
       final o = await _pipeline(
         client,
-      ).run(testSettings.copyWith(language: AppLanguage.fr), testContext);
+      ).run(testSettings.copyWith(language: AppLanguage.fr), askInput());
       expect(o.spokenText, l10nFor('fr').lostTrack);
     });
   });

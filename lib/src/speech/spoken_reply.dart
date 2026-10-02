@@ -25,26 +25,30 @@ class SpokenReply {
   final String detail;
   final bool isClarification;
 
-  /// For `CANT_SEE` the next step is the required action and must be spoken.
-  bool get nextStepIsRequired => confidence == Confidence.cantSee;
+  /// For `CANT_SEE` and `THINK` the next step is the physical action that
+  /// gets better evidence ("move your thumb"), so it must be spoken.
+  bool get nextStepIsRequired =>
+      confidence == Confidence.cantSee || confidence == Confidence.think;
 
   /// The text to speak now.
-  String get text => [referent, observation, confidencePhrase, nextStep]
-      .map((s) => s.trim())
-      .where((s) => s.isNotEmpty)
-      .join(' ');
+  String get text => [
+    referent,
+    observation,
+    confidencePhrase,
+    nextStep,
+  ].map((s) => s.trim()).where((s) => s.isNotEmpty).join(' ');
 
   int get wordCount => countWords(text);
 
   SpokenReply copyWith({String? nextStep, String? detail}) => SpokenReply(
-        confidence: confidence,
-        referent: referent,
-        observation: observation,
-        confidencePhrase: confidencePhrase,
-        nextStep: nextStep ?? this.nextStep,
-        detail: detail ?? this.detail,
-        isClarification: isClarification,
-      );
+    confidence: confidence,
+    referent: referent,
+    observation: observation,
+    confidencePhrase: confidencePhrase,
+    nextStep: nextStep ?? this.nextStep,
+    detail: detail ?? this.detail,
+    isClarification: isClarification,
+  );
 
   /// Counts words separated by whitespace.
   static int countWords(String s) =>

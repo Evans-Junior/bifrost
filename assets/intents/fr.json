@@ -1,0 +1,214 @@
+{
+  "_comment": "Les règles sont lues de haut en bas; la première qui correspond gagne. La comparaison ignore la casse, les accents et la ponctuation (les apostrophes deviennent des espaces : « qu'est-ce » -> « qu est ce »).",
+  "numbers": {
+    "un": 1,
+    "une": 1,
+    "deux": 2,
+    "trois": 3,
+    "quatre": 4,
+    "cinq": 5,
+    "six": 6,
+    "sept": 7,
+    "huit": 8,
+    "neuf": 9,
+    "dix": 10,
+    "onze": 11,
+    "douze": 12,
+    "premier": 1,
+    "premiere": 1,
+    "deuxieme": 2,
+    "troisieme": 3,
+    "quatrieme": 4,
+    "cinquieme": 5
+  },
+  "relation_words": {
+    "left": [
+      "gauche"
+    ],
+    "right": [
+      "droite"
+    ],
+    "closer": [
+      "proche",
+      "pres",
+      "devant"
+    ],
+    "further": [
+      "loin",
+      "eloigne",
+      "eloignee",
+      "derriere"
+    ]
+  },
+  "rules": [
+    {
+      "intent": "STOP",
+      "phrases": [
+        "arrete",
+        "arrete ca",
+        "annule",
+        "stop",
+        "tais toi",
+        "laisse faire",
+        "oublie ca"
+      ]
+    },
+    {
+      "intent": "REPEAT",
+      "phrases": [
+        "repete",
+        "repeter",
+        "redis le",
+        "redis ca",
+        "peux tu repeter",
+        "encore une fois"
+      ]
+    },
+    {
+      "intent": "MORE",
+      "phrases": [
+        "plus de details",
+        "plus de detail",
+        "dis m en plus",
+        "dis moi en plus",
+        "en savoir plus",
+        "plus d information"
+      ]
+    },
+    {
+      "intent": "STATUS",
+      "phrases": [
+        "qu est ce que j ai fait",
+        "qu est ce qui reste",
+        "qu est ce qu il reste",
+        "il reste quoi",
+        "combien il en reste",
+        "ou j en suis",
+        "j en suis ou"
+      ]
+    },
+    {
+      "intent": "WATCH",
+      "phrases": [
+        "dis moi quand tu peux le lire",
+        "dis moi quand tu peux lire",
+        "continue de regarder",
+        "continue a regarder",
+        "continue de chercher"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "sort",
+      "phrases": [
+        "aide moi a trier",
+        "trie ces",
+        "trier ces",
+        "aide moi a classer",
+        "aide moi a ranger",
+        "range ces"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "find",
+      "patterns": [
+        "\\b(?:trouve|retrouve|aide moi a trouver|ou sont|ou est|je cherche|je trouve pas|je ne trouve pas|j ai perdu) (?:mes|mon|ma) (?<goal>.+)$"
+      ]
+    },
+    {
+      "intent": "START_TASK",
+      "task": "match",
+      "phrases": [
+        "est ce que ca va avec",
+        "est ce que ca va ensemble",
+        "est ce que ca s agence",
+        "est ce que ca matche",
+        "ca va avec",
+        "aide moi a agencer"
+      ]
+    },
+    {
+      "intent": "CHALLENGE",
+      "phrases": [
+        "es tu sur",
+        "es tu sure",
+        "t es sur",
+        "t es sure",
+        "tu es sur",
+        "tu es sure",
+        "tu es certain",
+        "vraiment",
+        "je pense que c est",
+        "je crois que c est",
+        "c est faux",
+        "c est pas ca",
+        "ce n est pas ca",
+        "non c est"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "other",
+      "phrases": [
+        "non l autre",
+        "l autre",
+        "pas celui la",
+        "pas celle la"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "left",
+      "phrases": [
+        "celui de gauche",
+        "celle de gauche",
+        "a gauche",
+        "le plus a gauche",
+        "la plus a gauche"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "right",
+      "phrases": [
+        "celui de droite",
+        "celle de droite",
+        "a droite",
+        "le plus a droite",
+        "la plus a droite"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "closer",
+      "phrases": [
+        "le plus proche",
+        "la plus proche",
+        "celui devant",
+        "celle devant",
+        "le plus pres",
+        "la plus pres"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "relation": "further",
+      "phrases": [
+        "le plus loin",
+        "la plus loin",
+        "le plus eloigne",
+        "la plus eloignee",
+        "celui derriere",
+        "celle derriere"
+      ]
+    },
+    {
+      "intent": "REPAIR",
+      "patterns": [
+        "\\b(?:numero|pot|article|bouteille|boite|objet|item|chandail|chemise|bas|cle) (?<n>\\d+|un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze)\\b",
+        "^(?:le |la )?(?<n>premier|premiere|deuxieme|troisieme|quatrieme|cinquieme)$"
+      ]
+    }
+  ]
+}

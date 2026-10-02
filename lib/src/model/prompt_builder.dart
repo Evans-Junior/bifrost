@@ -39,6 +39,7 @@ class TurnContext {
     this.taskState = const {},
     this.recentTurns = const [],
     this.ocrText = const [],
+    this.extras = const {},
   });
 
   final String transcript;
@@ -48,6 +49,10 @@ class TurnContext {
   final Map<String, dynamic> taskState;
   final List<PastTurn> recentTurns;
   final List<Map<String, dynamic>> ocrText;
+
+  /// Extra labelled blocks for REPAIR and CHALLENGE, e.g.
+  /// `CHOSEN_REFERENT`, `CLARIFICATION_OPTIONS`, `PREVIOUS_ANSWER`.
+  final Map<String, Object?> extras;
 }
 
 /// Builds OpenAI-compatible chat messages for one turn.
@@ -68,17 +73,23 @@ class PromptBuilder {
   Future<String> systemPrompt(AppSettings settings) async {
     final lang = settings.language.code;
     final base = await _load('system_$lang.txt');
-    final position =
-        await _load('position_${settings.positionStyle.assetKey}_$lang.txt');
+    final position = await _load(
+      'position_${settings.positionStyle.assetKey}_$lang.txt',
+    );
     final language = await _load('language_$lang.txt');
-    final profile =
-        await _load('profile_${settings.profile.assetKey}_$lang.txt');
+    final profile = await _load(
+      'profile_${settings.profile.assetKey}_$lang.txt',
+    );
     final schema = await _load('response_schema.json');
     final filled = base
         .replaceAll('{POSITION_STYLE_INSTRUCTION}', position)
         .replaceAll('{LANGUAGE}', language);
     return '$filled\n\n$profile\n\nSchema:\n$schema';
   }
+
+  /// The retry instruction used when a clarification lacks two options.
+  Future<String> clarificationRetryInstruction(AppSettings settings) =>
+      _load('retry_clarification_${settings.language.code}.txt');
 
   /// The retry instruction used after invalid JSON.
   Future<String> retryInstruction(AppSettings settings) =>
@@ -97,7 +108,9 @@ class PromptBuilder {
           {'type': 'text', 'text': userText(ctx)},
           {
             'type': 'image_url',
-            'image_url': {'url': 'data:image/jpeg;base64,${ctx.imageBase64Jpeg}'},
+            'image_url': {
+              'url': 'data:image/jpeg;base64,${ctx.imageBase64Jpeg}',
+            },
           },
         ],
       },
@@ -118,6 +131,7 @@ class PromptBuilder {
       'RECENT_TURNS: ${jsonEncode(turns)}',
       'INTENT: ${ctx.intent}',
       'OCR_TEXT: ${jsonEncode(ctx.ocrText)}',
+      for (final e in ctx.extras.entries) '${e.key}: ${jsonEncode(e.value)}',
       'USER_SAID: ${ctx.transcript}',
     ].join('\n');
   }

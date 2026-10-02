@@ -76,9 +76,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           children: [
             _TopBar(
               status: _statusText(l10n, turn.status),
-              onSettings: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SettingsScreen()),
-              ),
+              onSettings: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
             ),
             Expanded(
               child: Stack(
@@ -105,13 +105,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   String _statusText(AppLocalizations l10n, TurnStatus s) => switch (s) {
-        TurnStatus.ready => l10n.statusReady,
-        TurnStatus.listening => l10n.statusListening,
-        TurnStatus.checking => l10n.statusChecking,
-        TurnStatus.speaking => l10n.statusSpeaking,
-        TurnStatus.offline => l10n.statusOffline,
-        TurnStatus.noCamera => l10n.statusNoCamera,
-      };
+    TurnStatus.ready => l10n.statusReady,
+    TurnStatus.listening => l10n.statusListening,
+    TurnStatus.checking => l10n.statusChecking,
+    TurnStatus.speaking => l10n.statusSpeaking,
+    TurnStatus.offline => l10n.statusOffline,
+    TurnStatus.noCamera => l10n.statusNoCamera,
+  };
 }
 
 /// Title, live status and the Settings button.

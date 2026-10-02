@@ -1,0 +1,10 @@
+{"needs_clarification": false, "clarification_options": [], "referent": null,
+ "evidence": "SEEN", "read_text": "", "confidence": "THINK", "confidence_reason": "I counted them by their lids",
+ "observation": "I see five spice jars in a row.", "next_step": "", "detail": "", "answer_changed": false,
+ "registry_updates": [
+  {"id": "jar_1", "label": "jar 1", "short_description": "tall jar, black lid", "location": "far left", "identified_as": ""},
+  {"id": "jar_2", "label": "jar 2", "short_description": "short jar, red lid", "location": "left of centre", "identified_as": ""},
+  {"id": "jar_3", "label": "jar 3", "short_description": "tall jar, white lid", "location": "centre", "identified_as": ""},
+  {"id": "jar_4", "label": "jar 4", "short_description": "short jar, green lid", "location": "right of centre", "identified_as": ""},
+  {"id": "jar_5", "label": "jar 5", "short_description": "tall jar, yellow lid", "location": "far right", "identified_as": ""}
+ ]}

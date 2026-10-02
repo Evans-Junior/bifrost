@@ -22,9 +22,11 @@ void main() {
   });
 
   test('integer bbox values are accepted', () {
-    final r = parser.parse('{"needs_clarification": false, '
-        '"referent": {"id": "a", "label": "item 1", "bbox": [0, 0, 1, 1]}, '
-        '"evidence": "SEEN", "confidence": "THINK"}');
+    final r = parser.parse(
+      '{"needs_clarification": false, '
+      '"referent": {"id": "a", "label": "item 1", "bbox": [0, 0, 1, 1]}, '
+      '"evidence": "SEEN", "confidence": "THINK"}',
+    );
     expect(r.referent!.bbox, [0.0, 0.0, 1.0, 1.0]);
     expect(r.observation, isEmpty);
   });
@@ -36,28 +38,37 @@ void main() {
   });
 
   test('truncated JSON is rejected', () {
-    expect(() => parser.parse(modelFixture('invalid_truncated.txt')),
-        throwsA(isA<SchemaException>()));
+    expect(
+      () => parser.parse(modelFixture('invalid_truncated.txt')),
+      throwsA(isA<SchemaException>()),
+    );
   });
 
   test('missing confidence is rejected', () {
     expect(
-        () => parser.parse('{"needs_clarification": false, "evidence": "READ"}'),
-        throwsA(isA<SchemaException>()));
+      () => parser.parse('{"needs_clarification": false, "evidence": "READ"}'),
+      throwsA(isA<SchemaException>()),
+    );
   });
 
   test('unknown confidence value is rejected', () {
     expect(
-        () => parser.parse('{"needs_clarification": false, '
-            '"evidence": "READ", "confidence": "SURE"}'),
-        throwsA(isA<SchemaException>()));
+      () => parser.parse(
+        '{"needs_clarification": false, '
+        '"evidence": "READ", "confidence": "SURE"}',
+      ),
+      throwsA(isA<SchemaException>()),
+    );
   });
 
   test('wrong field type is rejected', () {
     expect(
-        () => parser.parse('{"needs_clarification": "no", '
-            '"evidence": "READ", "confidence": "READ"}'),
-        throwsA(isA<SchemaException>()));
+      () => parser.parse(
+        '{"needs_clarification": "no", '
+        '"evidence": "READ", "confidence": "READ"}',
+      ),
+      throwsA(isA<SchemaException>()),
+    );
   });
 
   test('plain text is rejected', () {
