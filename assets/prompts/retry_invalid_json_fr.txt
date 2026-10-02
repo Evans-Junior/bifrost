@@ -1,1 +1,1 @@
-Return only valid JSON.
+Renvoie seulement du JSON valide.

@@ -1,1 +1,1 @@
-Give directions as clock positions from the user's point of view (12 o'clock = straight ahead, away from them), plus a distance in hand-widths, in French, e.g. 'à ta position 2 heures, à environ une main'.
+Donne les directions en positions d'horloge, du point de vue de la personne (midi = droit devant, en s'éloignant d'elle), avec une distance en largeurs de main, par exemple « à 2 heures, à environ une main ».

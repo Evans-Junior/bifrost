@@ -26,7 +26,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get openSettings => 'Réglages';
 
   @override
-  String get statusReady => 'Prêt';
+  String get statusReady => 'En attente';
 
   @override
   String get statusListening => 'J\'écoute';
@@ -51,7 +51,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get lostTrack =>
-      'Désolé, je me suis perdu. Pose ta question à nouveau.';
+      'Pardon, j\'ai perdu le fil. Pose ta question à nouveau.';
 
   @override
   String get cannotConnect =>
@@ -93,14 +93,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confidenceThink(String reason) {
-    return 'Je pense que oui, car $reason.';
+    return 'Je pense que oui, parce que $reason.';
   }
 
   @override
-  String get confidenceThinkNoReason => 'Je n\'en suis pas tout à fait sûr.';
+  String get confidenceThinkNoReason => 'Je n\'en ai pas la certitude.';
 
   @override
-  String get cantSee => 'Je n\'en vois pas assez pour le dire.';
+  String get cantSee => 'Je ne vois pas assez bien pour le dire.';
 
   @override
   String get cantSeeDefaultAction => 'Tourne-le lentement dans ta main.';
@@ -123,13 +123,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsModelName => 'Nom du modèle';
 
   @override
-  String get settingsApiKey => 'Clé d\'API';
+  String get settingsApiKey => 'Clé API';
 
   @override
   String get settingsReasoning => 'Effort de raisonnement';
 
   @override
-  String get settingsTimeout => 'Délai en secondes';
+  String get settingsTimeout => 'Délai d\'attente (secondes)';
 
   @override
   String get settingsVoice => 'Voix et langue';

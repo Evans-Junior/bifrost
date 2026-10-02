@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../settings/app_settings.dart';
+import 'locale_picker.dart';
 
 /// Text-to-speech output. Every [speak] completes when speech ends or is
 /// interrupted by [stop].
@@ -31,13 +33,26 @@ class TtsService {
       _configured = true;
     }
     if (language != _language) {
-      await _tts.setLanguage(language.localeTag);
+      await _tts.setLanguage(await _resolve(language.localeTag));
       _language = language;
     }
     if (rate != _rate) {
       await _tts.setSpeechRate(rate);
       _rate = rate;
     }
+  }
+
+  /// Picks the closest voice language the device has (fr-CA, then fr-FR...).
+  Future<String> _resolve(String wanted) async {
+    final langs = await _tts.getLanguages;
+    final available = langs is List ? langs.map((l) => '$l') : <String>[];
+    final picked = LocalePicker.pick(wanted, available);
+    if (picked == null) {
+      debugPrint('[tts] no voice for $wanted on this device');
+      return wanted;
+    }
+    if (picked != wanted) debugPrint('[tts] $wanted unavailable, using $picked');
+    return picked;
   }
 
   /// Speaks [text] and waits until it finishes.

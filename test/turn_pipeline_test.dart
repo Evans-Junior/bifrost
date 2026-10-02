@@ -14,18 +14,24 @@ TurnPipeline _pipeline(FakeModelClient client) =>
 
 void main() {
   group('Phase 1 acceptance (fixtures)', () {
-    test('labelled jar: starts with a referent, includes confidence phrase',
-        () async {
-      final client = FakeModelClient([modelFixture('labelled_jar_read.json')]);
-      final o = await _pipeline(client).run(testSettings, testContext);
-      expect(o.isSuccess, isTrue);
-      expect(o.spokenText, startsWith('Jar 1, in your right hand.'));
-      expect(o.spokenText, contains(l10nFor('en').confidenceRead));
-    });
+    test(
+      'labelled jar: starts with a referent, includes confidence phrase',
+      () async {
+        final client = FakeModelClient([
+          modelFixture('labelled_jar_read.json'),
+        ]);
+        final o = await _pipeline(client).run(testSettings, testContext);
+        expect(o.isSuccess, isTrue);
+        expect(o.spokenText, startsWith('Jar 1, in your right hand.'));
+        expect(o.spokenText, contains(l10nFor('en').confidenceRead));
+      },
+    );
 
-    test('label turned away: CANT_SEE + action, never a spice name',
-        () async {
-      for (final fixture in ['label_away_clean.json', 'label_away_leaky.json']) {
+    test('label turned away: CANT_SEE + action, never a spice name', () async {
+      for (final fixture in [
+        'label_away_clean.json',
+        'label_away_leaky.json',
+      ]) {
         final client = FakeModelClient([modelFixture(fixture)]);
         final o = await _pipeline(client).run(testSettings, testContext);
         expect(o.response!.confidence, Confidence.cantSee, reason: fixture);
@@ -33,10 +39,16 @@ void main() {
         expect(o.spokenText, contains("I can't see"), reason: fixture);
         expect(o.spokenText, contains('Turn it'), reason: fixture);
         for (final spice in _spices) {
-          expect(o.spokenText.toLowerCase(), isNot(contains(spice)),
-              reason: '$fixture spoke $spice');
-          expect(o.reply!.detail.toLowerCase(), isNot(contains(spice)),
-              reason: '$fixture kept $spice in detail');
+          expect(
+            o.spokenText.toLowerCase(),
+            isNot(contains(spice)),
+            reason: '$fixture spoke $spice',
+          );
+          expect(
+            o.reply!.detail.toLowerCase(),
+            isNot(contains(spice)),
+            reason: '$fixture kept $spice in detail',
+          );
         }
       }
     });
@@ -66,12 +78,12 @@ void main() {
 
   group('honest system status', () {
     test('timeout speaks the timeout line', () async {
-      final client = FakeModelClient(
-        [modelFixture('labelled_jar_read.json')],
-        delay: const Duration(seconds: 3),
-      );
-      final o = await _pipeline(client)
-          .run(testSettings.copyWith(timeoutS: 1), testContext);
+      final client = FakeModelClient([
+        modelFixture('labelled_jar_read.json'),
+      ], delay: const Duration(seconds: 3));
+      final o = await _pipeline(
+        client,
+      ).run(testSettings.copyWith(timeoutS: 1), testContext);
       expect(o.failure, TurnFailure.timeout);
       expect(o.spokenText, "I couldn't get an answer. Try again.");
     });
@@ -85,8 +97,9 @@ void main() {
 
     test('French settings give French status lines', () async {
       final client = FakeModelClient(['x', 'y']);
-      final o = await _pipeline(client).run(
-          testSettings.copyWith(language: AppLanguage.fr), testContext);
+      final o = await _pipeline(
+        client,
+      ).run(testSettings.copyWith(language: AppLanguage.fr), testContext);
       expect(o.spokenText, l10nFor('fr').lostTrack);
     });
   });
@@ -96,13 +109,24 @@ void main() {
 
     for (final lang in AppLanguage.values) {
       test('system prompt fills placeholders (${lang.code})', () async {
-        final s = await builder.systemPrompt(testSettings.copyWith(
-            language: lang, positionStyle: PositionStyle.clock));
+        final s = await builder.systemPrompt(
+          testSettings.copyWith(
+            language: lang,
+            positionStyle: PositionStyle.clock,
+          ),
+        );
         expect(s, isNot(contains('{LANGUAGE}')));
         expect(s, isNot(contains('{POSITION_STYLE_INSTRUCTION}')));
-        expect(s, contains("o'clock"));
+        expect(s, contains(lang == AppLanguage.en ? "o'clock" : 'heures'));
         expect(s, contains('"needs_clarification"'));
-        expect(s, contains('The user is blind'));
+        expect(
+          s,
+          contains(
+            lang == AppLanguage.en
+                ? 'The user is blind'
+                : 'La personne est aveugle',
+          ),
+        );
       });
     }
 
@@ -126,12 +150,14 @@ void main() {
       final turns = [
         for (var i = 0; i < 9; i++) PastTurn(user: 'q$i', assistant: 'a$i'),
       ];
-      final text = builder.userText(TurnContext(
-        transcript: 't',
-        intent: 'ASK',
-        imageBase64Jpeg: '',
-        recentTurns: turns,
-      ));
+      final text = builder.userText(
+        TurnContext(
+          transcript: 't',
+          intent: 'ASK',
+          imageBase64Jpeg: '',
+          recentTurns: turns,
+        ),
+      );
       expect(text, isNot(contains('q2')));
       expect(text, contains('q3'));
       expect(text, contains('q8'));
