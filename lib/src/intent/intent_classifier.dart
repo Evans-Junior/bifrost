@@ -59,7 +59,27 @@ class _Rule {
 /// Local, rule-based intent classifier (Section 6). All phrases live in
 /// `assets/intents/{en,fr}.json` so the team can edit them without code.
 class IntentClassifier {
-  IntentClassifier._(this._rules, this._numbers, this._relationWords);
+  IntentClassifier._(
+    this._rules,
+    this._numbers,
+    this._relationWords,
+    this._yes,
+    this._no,
+  );
+
+  final List<String> _yes;
+  final List<String> _no;
+
+  /// True if [utterance] is a plain yes ("yes", "sure", "oui").
+  bool isYes(String utterance) => _startsWithAny(utterance, _yes);
+
+  /// True if [utterance] is a plain no ("no", "non merci").
+  bool isNo(String utterance) => _startsWithAny(utterance, _no);
+
+  static bool _startsWithAny(String utterance, List<String> words) {
+    final t = TextNormalize.forMatching(utterance);
+    return words.any((w) => t == w || t.startsWith('$w '));
+  }
 
   final List<_Rule> _rules;
   final Map<String, int> _numbers;
@@ -103,7 +123,17 @@ class IntentClassifier {
             TextNormalize.forMatching(w as String),
         ],
     };
-    return IntentClassifier._(rules, numbers, relationWords);
+    List<String> words(String key) => [
+      for (final w in json[key] as List? ?? const [])
+        TextNormalize.forMatching(w as String),
+    ];
+    return IntentClassifier._(
+      rules,
+      numbers,
+      relationWords,
+      words('yes_words'),
+      words('no_words'),
+    );
   }
 
   /// Loads `assets/intents/<languageCode>.json`.

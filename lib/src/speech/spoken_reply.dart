@@ -40,13 +40,28 @@ class SpokenReply {
 
   int get wordCount => countWords(text);
 
-  SpokenReply copyWith({String? nextStep, String? detail}) => SpokenReply(
+  SpokenReply copyWith({
+    String? observation,
+    String? nextStep,
+    String? detail,
+  }) => SpokenReply(
     confidence: confidence,
     referent: referent,
-    observation: observation,
+    observation: observation ?? this.observation,
     confidencePhrase: confidencePhrase,
     nextStep: nextStep ?? this.nextStep,
     detail: detail ?? this.detail,
+    isClarification: isClarification,
+  );
+
+  /// The same reply without its referent, for when the referent was
+  /// already spoken during streaming.
+  SpokenReply copyWithoutReferent() => SpokenReply(
+    confidence: confidence,
+    observation: observation,
+    confidencePhrase: confidencePhrase,
+    nextStep: nextStep,
+    detail: detail,
     isClarification: isClarification,
   );
 

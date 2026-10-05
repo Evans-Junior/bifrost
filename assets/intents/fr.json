@@ -40,6 +40,20 @@
       "derriere"
     ]
   },
+  "yes_words": [
+    "oui",
+    "ouais",
+    "d'accord",
+    "ok",
+    "bien sûr",
+    "vas-y",
+    "s'il te plaît"
+  ],
+  "no_words": [
+    "non",
+    "non merci",
+    "pas maintenant"
+  ],
   "rules": [
     {
       "intent": "STOP",

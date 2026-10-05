@@ -41,6 +41,22 @@
       "behind"
     ]
   },
+  "yes_words": [
+    "yes",
+    "yeah",
+    "yep",
+    "sure",
+    "ok",
+    "okay",
+    "please",
+    "go ahead"
+  ],
+  "no_words": [
+    "no",
+    "nope",
+    "no thanks",
+    "not now"
+  ],
   "rules": [
     {
       "intent": "STOP",

@@ -40,7 +40,7 @@
       }
     }
   },
-  "confidenceRead": "I read it on the label.",
+  "confidenceRead": "I read this directly.",
   "confidenceThink": "I think so, because {reason}.",
   "@confidenceThink": {
     "placeholders": {
@@ -159,11 +159,102 @@
   "moreNone": "I have no more detail.",
   "repeatNone": "I haven't said anything yet.",
   "stopped": "Stopped.",
-  "watchNotReady": "Watch mode isn't available yet.",
   "itemNoun": "item",
   "settingsStudy": "Study",
   "settingsParticipant": "Participant code",
   "settingsLogServer": "Log server URL",
   "serverBusy": "The server is busy. Try again in a moment.",
-  "statusNoItems": "No items labelled yet. Ask me what's in front of you."
+  "statusNoItems": "No items labelled yet. Ask me what's in front of you.",
+  "referentScene": "Overall view.",
+  "correction": "Correction:",
+  "aimNothingInView": "Nothing in view. Sweep slowly.",
+  "glare": "Glare. Tilt it away from the light.",
+  "blur": "Hold it still.",
+  "watchOffer": "Want me to tell you when I can read it?",
+  "watchStarted": "Watching. Turn it slowly.",
+  "watchTimeout": "I still can't read it. Try turning it slowly the other way.",
+  "watchDeclined": "Okay.",
+  "dirLeft": "left",
+  "dirRight": "right",
+  "dirUp": "up",
+  "dirDown": "down",
+  "dirFullView": "there",
+  "learnVibrationsTitle": "Learn the vibrations",
+  "vibLeftMeaning": "One long pulse: go left. Long means left.",
+  "vibRightMeaning": "Two short pulses: go right. Right is rapid.",
+  "vibUpMeaning": "Three short taps: go up. Up has more taps.",
+  "vibDownMeaning": "Two long pulses: go down. Down is heavy.",
+  "vibFullViewMeaning": "One strong buzz: stop, you're there.",
+  "vibPlayAll": "Play each pattern",
+  "vibStartPractice": "Start practice",
+  "vibWhichDirection": "Which direction was that?",
+  "vibCorrect": "Correct.",
+  "vibWrong": "Not quite. That was {direction}.",
+  "@vibWrong": {
+    "placeholders": {
+      "direction": {
+        "type": "String"
+      }
+    }
+  },
+  "vibReady": "Four in a row. You're ready.",
+  "vibScore": "{correct} correct in a row",
+  "@vibScore": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      }
+    }
+  },
+  "vibPlayAgain": "Play again",
+  "vibUnsupported": "This phone can't vibrate.",
+  "learnSoundsTitle": "Learn the sounds",
+  "earconListenMeaning": "Listening started",
+  "earconReadMeaning": "I read it",
+  "earconThinkMeaning": "I think so",
+  "earconCantSeeMeaning": "I can't see it",
+  "earconClarifyMeaning": "I'm asking which one you mean",
+  "earconWatchMeaning": "Still watching",
+  "earconErrorMeaning": "Error or no connection",
+  "settingsFeedback": "Sounds and vibration",
+  "settingsEarcons": "Earcons",
+  "settingsVibration": "Vibration guidance",
+  "settingsIntensity": "Vibration intensity",
+  "intensityLow": "Low",
+  "intensityMedium": "Medium",
+  "intensityHigh": "High",
+  "settingsVibrateSearch": "Vibrate in search tasks",
+  "settingsSlowPatterns": "Slow patterns",
+  "settingsSpeakDirection": "Also speak direction",
+  "settingsRedoOnboarding": "Redo the setup",
+  "settingsDeveloper": "Developer: thresholds",
+  "onbWelcome": "Welcome to BIFROST. This setup takes about a minute.",
+  "onbLanguage": "Choose a language. Choisis une langue.",
+  "onbVision": "Are you blind, or do you have low vision?",
+  "onbPosition": "How should I give positions? Clock face, like at your 2 o'clock, or left and right?",
+  "onbRate": "This is my speaking speed. Choose faster, slower, or keep it.",
+  "onbFaster": "Faster",
+  "onbSlower": "Slower",
+  "onbKeep": "Keep this speed",
+  "onbEarcons": "Do you want short sounds that tell you how sure I am?",
+  "onbVibration": "Do you want vibrations that guide you toward objects?",
+  "onbLearnNow": "Learn the vibrations now?",
+  "onbPracticeHold": "Practice. Hold the big button, say anything, then let go.",
+  "onbPracticeHeard": "I heard: {words}.",
+  "@onbPracticeHeard": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "onbPracticeEarcon": "This sound means: I read it.",
+  "onbPracticeAsk": "Now point the camera at any object, hold the button and ask: what is this?",
+  "onbDone": "You're all set.",
+  "yes": "Yes",
+  "no": "No",
+  "next": "Next",
+  "skip": "Skip",
+  "holdToPractice": "Hold to practise",
+  "watchQuestion": "What does the label say?"
 }

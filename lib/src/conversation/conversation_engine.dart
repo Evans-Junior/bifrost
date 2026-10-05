@@ -8,6 +8,7 @@ import '../settings/app_settings.dart';
 import '../text/text_normalize.dart';
 import '../turn/turn_pipeline.dart';
 import '../vision/ocr_result.dart';
+import '../vision/scene_monitor.dart';
 import 'object_registry.dart';
 import 'task_memory.dart';
 
@@ -32,6 +33,21 @@ class ConversationState {
 
   /// The registry id of the object the last answer was about.
   String? lastReferentId;
+
+  /// True right after "Want me to tell you when I can read it?".
+  bool pendingWatchOffer = false;
+
+  /// The last question that went to the model; watch mode asks it again.
+  String lastQuestion = '';
+}
+
+/// Why the engine answered before calling the model (Section 7, step 3).
+enum PreCheck {
+  /// Nothing detected in the camera stream: aim first.
+  nothingInView,
+
+  /// Too much glare on the target.
+  glare,
 }
 
 /// What the engine decided for one utterance.
@@ -43,6 +59,10 @@ class EngineReply {
     this.confidence,
     this.isClarification = false,
     this.ocrTokens = const [],
+    this.startWatch = false,
+    this.preCheck,
+    this.referentBox,
+    this.offeredWatch = false,
   });
 
   /// Text to speak (may be empty when a turn was cancelled).
@@ -56,6 +76,18 @@ class EngineReply {
 
   /// Normalized words on-device OCR found in the still, for the log.
   final List<String> ocrTokens;
+
+  /// Watch mode should start now (WATCH intent, or "yes" to the offer).
+  final bool startWatch;
+
+  /// Set when the pre-check answered instead of the model.
+  final PreCheck? preCheck;
+
+  /// The referent's box in the image, for locking the guidance target.
+  final List<double>? referentBox;
+
+  /// The reply ended with the watch-mode offer.
+  final bool offeredWatch;
 
   bool get usedModel => outcome != null;
 }
@@ -72,14 +104,36 @@ class ConversationEngine {
   ConversationState state = ConversationState();
 
   /// Handles one utterance.
+  ///
+  /// [scene] returns the latest camera-stream snapshot (null when there is
+  /// no stream, e.g. in the simulator). [onEarlyReferent] receives the
+  /// referent phrase when it can be spoken before the full answer.
   Future<EngineReply> handle({
     required String transcript,
     required AppSettings settings,
     required IntentClassifier classifier,
     required Future<CapturedFrame?> Function() capture,
     CancelToken? cancel,
+    SceneSnapshot? Function()? scene,
+    void Function(String phrase)? onEarlyReferent,
   }) async {
     final l10n = lookupAppLocalizations(settings.language.locale);
+
+    // Answer to "Want me to tell you when I can read it?"
+    if (state.pendingWatchOffer) {
+      state.pendingWatchOffer = false;
+      if (classifier.isYes(transcript)) {
+        return _local(
+          const Intent(IntentType.watch),
+          l10n.watchStarted,
+          startWatch: true,
+        );
+      }
+      if (classifier.isNo(transcript)) {
+        return _local(const Intent(IntentType.ask), l10n.watchDeclined);
+      }
+    }
+
     final intent = classifier.classify(transcript);
     switch (intent.type) {
       case IntentType.stop:
@@ -97,7 +151,7 @@ class ConversationEngine {
       case IntentType.status:
         return _local(intent, statusText(l10n));
       case IntentType.watch:
-        return _local(intent, l10n.watchNotReady);
+        return _local(intent, l10n.watchStarted, startWatch: true);
       case IntentType.startTask:
         _startTask(intent, l10n);
       case IntentType.ask:
@@ -108,9 +162,76 @@ class ConversationEngine {
         }
     }
 
+    final check = _preCheck(intent, scene?.call());
+    if (check != null) {
+      return _local(
+        intent,
+        check == PreCheck.glare ? l10n.glare : l10n.aimNothingInView,
+        preCheck: check,
+      );
+    }
+    return _askModel(
+      transcript: transcript,
+      intent: intent,
+      settings: settings,
+      classifier: classifier,
+      capture: capture,
+      cancel: cancel,
+      onEarlyReferent: onEarlyReferent,
+    );
+  }
+
+  /// Watch mode found readable text: ask the last question again as ASK
+  /// (Section 12).
+  Future<EngineReply> handleWatchTrigger({
+    required AppSettings settings,
+    required IntentClassifier classifier,
+    required Future<CapturedFrame?> Function() capture,
+    CancelToken? cancel,
+  }) {
+    final question = state.lastQuestion.isEmpty
+        ? lookupAppLocalizations(settings.language.locale).watchQuestion
+        : state.lastQuestion;
+    return _askModel(
+      transcript: question,
+      intent: const Intent(IntentType.ask),
+      settings: settings,
+      classifier: classifier,
+      capture: capture,
+      cancel: cancel,
+    );
+  }
+
+  /// Section 7 step 3: no object or glare -> speak a hint instead of
+  /// calling the model. START_TASK and search tasks always need the whole
+  /// scene, so they skip it.
+  PreCheck? _preCheck(Intent intent, SceneSnapshot? scene) {
+    if (scene == null) return null;
+    if (intent.type == IntentType.startTask || state.task.type == 'find') {
+      return null;
+    }
+    if (!scene.hasObject) return PreCheck.nothingInView;
+    if (scene.glareFraction > glareThreshold) return PreCheck.glare;
+    return null;
+  }
+
+  /// Glare fraction above which the pre-check speaks the glare hint.
+  double glareThreshold = 0.15;
+
+  Future<EngineReply> _askModel({
+    required String transcript,
+    required Intent intent,
+    required AppSettings settings,
+    required IntentClassifier classifier,
+    required Future<CapturedFrame?> Function() capture,
+    CancelToken? cancel,
+    void Function(String phrase)? onEarlyReferent,
+  }) async {
+    final l10n = lookupAppLocalizations(settings.language.locale);
     if (!settings.isServerConfigured) return _local(intent, l10n.notConfigured);
     final frame = await capture();
     if (frame == null) return _local(intent, l10n.noImage);
+    state.lastQuestion = transcript;
 
     final outcome = await pipeline.run(
       settings,
@@ -128,6 +249,7 @@ class ConversationEngine {
         intent: intent.type,
         registry: state.registry.copy(),
         ocr: frame.ocr,
+        onEarlyReferent: onEarlyReferent,
       ),
       cancel: cancel,
     );
@@ -135,13 +257,25 @@ class ConversationEngine {
       return EngineReply(text: '', intent: intent, outcome: outcome);
     }
     _remember(transcript, outcome);
+
+    // After CANT_SEE, offer watch mode (Section 12).
+    final cantSee = outcome.reply?.confidence == Confidence.cantSee;
+    var text = outcome.spokenText;
+    if (cantSee) {
+      text = '$text ${l10n.watchOffer}';
+      state
+        ..pendingWatchOffer = true
+        ..lastSpoken = text;
+    }
     return EngineReply(
-      text: outcome.spokenText,
+      text: text,
       intent: intent,
       outcome: outcome,
       confidence: outcome.reply?.confidence,
       isClarification: outcome.reply?.isClarification ?? false,
       ocrTokens: frame.ocr.tokens.toList(),
+      referentBox: outcome.response?.referent?.bbox,
+      offeredWatch: cantSee,
     );
   }
 
@@ -267,9 +401,20 @@ class ConversationEngine {
     );
   }
 
-  EngineReply _local(Intent intent, String text, {bool remember = true}) {
+  EngineReply _local(
+    Intent intent,
+    String text, {
+    bool remember = true,
+    bool startWatch = false,
+    PreCheck? preCheck,
+  }) {
     if (remember) state.lastSpoken = text;
-    return EngineReply(text: text, intent: intent);
+    return EngineReply(
+      text: text,
+      intent: intent,
+      startWatch: startWatch,
+      preCheck: preCheck,
+    );
   }
 
   static String _join(List<String> items, AppLocalizations l10n) {

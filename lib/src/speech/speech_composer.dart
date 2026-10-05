@@ -51,9 +51,9 @@ class SpeechComposer {
     final count = extras.taskObjectCount;
     return SpokenReply(
       confidence: r.confidence,
-      referent: r.referent == null && count != null
-          ? l10n.taskRegistered(count)
-          : referentPhrase(r.referent),
+      referent: r.referent != null
+          ? referentPhrase(r.referent)
+          : (count != null ? l10n.taskRegistered(count) : l10n.referentScene),
       observation: r.confidence == Confidence.cantSee
           ? l10n.cantSee
           : _sentence(r.observation),

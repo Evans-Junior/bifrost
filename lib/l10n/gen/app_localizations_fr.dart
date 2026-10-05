@@ -89,7 +89,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get confidenceRead => 'Je l\'ai lu sur l\'étiquette.';
+  String get confidenceRead => 'Je l\'ai lu directement.';
 
   @override
   String confidenceThink(String reason) {
@@ -246,10 +246,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get stopped => 'D\'accord, j\'arrête.';
 
   @override
-  String get watchNotReady =>
-      'Le mode surveillance n\'est pas encore disponible.';
-
-  @override
   String get itemNoun => 'objet';
 
   @override
@@ -267,4 +263,236 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get statusNoItems =>
       'Aucun objet étiqueté pour l\'instant. Demande-moi ce qu\'il y a devant toi.';
+
+  @override
+  String get referentScene => 'Vue d\'ensemble.';
+
+  @override
+  String get correction => 'Correction :';
+
+  @override
+  String get aimNothingInView => 'Rien en vue. Balaie lentement.';
+
+  @override
+  String get glare => 'Reflet. Incline-le loin de la lumière.';
+
+  @override
+  String get blur => 'Tiens-le immobile.';
+
+  @override
+  String get watchOffer => 'Veux-tu que je te dise quand je peux le lire ?';
+
+  @override
+  String get watchStarted => 'Je regarde. Tourne-le lentement.';
+
+  @override
+  String get watchTimeout =>
+      'Je n\'arrive toujours pas à le lire. Essaie de le tourner lentement dans l\'autre sens.';
+
+  @override
+  String get watchDeclined => 'D\'accord.';
+
+  @override
+  String get dirLeft => 'gauche';
+
+  @override
+  String get dirRight => 'droite';
+
+  @override
+  String get dirUp => 'haut';
+
+  @override
+  String get dirDown => 'bas';
+
+  @override
+  String get dirFullView => 'ça y est';
+
+  @override
+  String get learnVibrationsTitle => 'Apprendre les vibrations';
+
+  @override
+  String get vibLeftMeaning =>
+      'Une longue impulsion : va à gauche. Long, c\'est gauche.';
+
+  @override
+  String get vibRightMeaning =>
+      'Deux impulsions courtes : va à droite. Droite, c\'est rapide.';
+
+  @override
+  String get vibUpMeaning =>
+      'Trois petits tapotements : va vers le haut. Haut, c\'est plus de tapotements.';
+
+  @override
+  String get vibDownMeaning =>
+      'Deux longues impulsions : va vers le bas. Bas, c\'est lourd.';
+
+  @override
+  String get vibFullViewMeaning => 'Une forte vibration : arrête, tu y es.';
+
+  @override
+  String get vibPlayAll => 'Jouer chaque motif';
+
+  @override
+  String get vibStartPractice => 'Commencer l\'exercice';
+
+  @override
+  String get vibWhichDirection => 'C\'était quelle direction ?';
+
+  @override
+  String get vibCorrect => 'Exact.';
+
+  @override
+  String vibWrong(String direction) {
+    return 'Pas tout à fait. C\'était $direction.';
+  }
+
+  @override
+  String get vibReady =>
+      'Quatre de suite. C\'est bon, tu maîtrises les vibrations.';
+
+  @override
+  String vibScore(int correct) {
+    return '$correct bonnes réponses de suite';
+  }
+
+  @override
+  String get vibPlayAgain => 'Rejouer';
+
+  @override
+  String get vibUnsupported => 'Ce téléphone ne peut pas vibrer.';
+
+  @override
+  String get learnSoundsTitle => 'Apprendre les sons';
+
+  @override
+  String get earconListenMeaning => 'J\'écoute';
+
+  @override
+  String get earconReadMeaning => 'Je l\'ai lu';
+
+  @override
+  String get earconThinkMeaning => 'Je pense que oui';
+
+  @override
+  String get earconCantSeeMeaning => 'Je ne le vois pas';
+
+  @override
+  String get earconClarifyMeaning => 'Je te demande lequel';
+
+  @override
+  String get earconWatchMeaning => 'Je regarde encore';
+
+  @override
+  String get earconErrorMeaning => 'Erreur ou pas de connexion';
+
+  @override
+  String get settingsFeedback => 'Sons et vibrations';
+
+  @override
+  String get settingsEarcons => 'Sons indicateurs';
+
+  @override
+  String get settingsVibration => 'Guidage par vibration';
+
+  @override
+  String get settingsIntensity => 'Intensité des vibrations';
+
+  @override
+  String get intensityLow => 'Faible';
+
+  @override
+  String get intensityMedium => 'Moyenne';
+
+  @override
+  String get intensityHigh => 'Forte';
+
+  @override
+  String get settingsVibrateSearch => 'Vibrer pendant les recherches';
+
+  @override
+  String get settingsSlowPatterns => 'Motifs lents';
+
+  @override
+  String get settingsSpeakDirection => 'Dire aussi la direction';
+
+  @override
+  String get settingsRedoOnboarding => 'Refaire la configuration';
+
+  @override
+  String get settingsDeveloper => 'Développeur : seuils';
+
+  @override
+  String get onbWelcome =>
+      'Bienvenue dans BIFROST. Cette configuration prend environ une minute.';
+
+  @override
+  String get onbLanguage => 'Choose a language. Choisis une langue.';
+
+  @override
+  String get onbVision => 'Es-tu aveugle, ou as-tu une basse vision ?';
+
+  @override
+  String get onbPosition =>
+      'Comment veux-tu les positions ? En cadran d\'horloge, comme à 2 heures, ou à gauche et à droite ?';
+
+  @override
+  String get onbRate =>
+      'Voici ma vitesse de parole. Choisis plus vite, plus lent, ou garde-la.';
+
+  @override
+  String get onbFaster => 'Plus vite';
+
+  @override
+  String get onbSlower => 'Plus lent';
+
+  @override
+  String get onbKeep => 'Garder cette vitesse';
+
+  @override
+  String get onbEarcons =>
+      'Veux-tu de courts sons qui indiquent à quel point ma réponse est sûre ?';
+
+  @override
+  String get onbVibration =>
+      'Veux-tu des vibrations qui te guident vers les objets ?';
+
+  @override
+  String get onbLearnNow => 'Apprendre les vibrations maintenant ?';
+
+  @override
+  String get onbPracticeHold =>
+      'Exercice. Maintiens le grand bouton, dis n\'importe quoi, puis relâche.';
+
+  @override
+  String onbPracticeHeard(String words) {
+    return 'J\'ai entendu : $words.';
+  }
+
+  @override
+  String get onbPracticeEarcon => 'Ce son veut dire : je l\'ai lu.';
+
+  @override
+  String get onbPracticeAsk =>
+      'Maintenant, pointe la caméra vers un objet, maintiens le bouton et demande : c\'est quoi ça ?';
+
+  @override
+  String get onbDone => 'Tout est prêt.';
+
+  @override
+  String get yes => 'Oui';
+
+  @override
+  String get no => 'Non';
+
+  @override
+  String get next => 'Suivant';
+
+  @override
+  String get skip => 'Passer';
+
+  @override
+  String get holdToPractice => 'Maintenir pour s\'exercer';
+
+  @override
+  String get watchQuestion => 'Que dit l\'étiquette ?';
 }

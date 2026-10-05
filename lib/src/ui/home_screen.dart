@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void didChangeAppLifecycleState(AppLifecycleState lifecycle) {
     if (lifecycle == AppLifecycleState.inactive) {
       setState(() => _cameraReady = false);
-      ref.read(cameraServiceProvider).stop();
+      _turns.stopCamera();
     } else if (lifecycle == AppLifecycleState.resumed) {
       _openCamera();
     }

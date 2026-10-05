@@ -13,7 +13,7 @@ void main() {
     final r = en.compose(responseFixture('labelled_jar_read.json'));
     expect(
       r.text,
-      'Jar 1, in your right hand. The label says cumin. I read it on the label.',
+      'Jar 1, in your right hand. The label says cumin. I read this directly.',
     );
     expect(r.detail, 'Ground cumin, 45 g.');
   });
@@ -43,7 +43,7 @@ void main() {
     expect(en.compose(input).nextStep, l10nFor('en').cantSeeDefaultAction);
   });
 
-  test('missing referent falls back to a generic referent', () {
+  test('a scene-level answer (no referent) opens with "Overall view"', () {
     const input = VlmResponse(
       needsClarification: false,
       evidence: Evidence.seen,
@@ -51,7 +51,7 @@ void main() {
       observation: 'a mug',
     );
     final text = en.compose(input).text;
-    expect(text, startsWith('The item in front of the camera.'));
+    expect(text, startsWith('Overall view.'));
     expect(text, contains('A mug.'));
   });
 
@@ -63,7 +63,7 @@ void main() {
 
   test('French templates are used in French', () {
     final r = fr.compose(responseFixture('labelled_jar_read.json'));
-    expect(r.text, contains("Je l'ai lu sur l'étiquette."));
+    expect(r.text, contains("Je l'ai lu directement."));
     final c = fr.compose(responseFixture('label_away_clean.json'));
     expect(c.text, contains(l10nFor('fr').cantSee));
   });
@@ -84,5 +84,15 @@ void main() {
     final text = en.compose(guarded).text.toLowerCase();
     expect(text, isNot(contains('cumin')));
     expect(text, contains("can't see"));
+  });
+
+  test('a referent without a label still gets a referent phrase', () {
+    final input = responseFixture('thumb_over_label.json').copyWith(
+      referent: const Referent(id: 'x', label: ''),
+    );
+    expect(
+      en.compose(input).text,
+      startsWith('The item in front of the camera.'),
+    );
   });
 }

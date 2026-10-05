@@ -1,0 +1,86 @@
+{
+ "readable_from_ms": 2750,
+ "frames": [
+  {
+   "at_ms": 0,
+   "lines": []
+  },
+  {
+   "at_ms": 250,
+   "lines": []
+  },
+  {
+   "at_ms": 500,
+   "lines": []
+  },
+  {
+   "at_ms": 750,
+   "lines": []
+  },
+  {
+   "at_ms": 1000,
+   "lines": []
+  },
+  {
+   "at_ms": 1250,
+   "lines": []
+  },
+  {
+   "at_ms": 1500,
+   "lines": [
+    "C"
+   ]
+  },
+  {
+   "at_ms": 1750,
+   "lines": [
+    "CU"
+   ]
+  },
+  {
+   "at_ms": 2000,
+   "lines": [
+    "CU",
+    "IN"
+   ]
+  },
+  {
+   "at_ms": 2250,
+   "lines": [
+    "CUM"
+   ]
+  },
+  {
+   "at_ms": 2500,
+   "lines": [
+    "CUMI"
+   ]
+  },
+  {
+   "at_ms": 2750,
+   "lines": [
+    "CUMIN"
+   ]
+  },
+  {
+   "at_ms": 3000,
+   "lines": [
+    "CUMIN",
+    "45 g"
+   ]
+  },
+  {
+   "at_ms": 3250,
+   "lines": [
+    "CUMIN",
+    "Ground"
+   ]
+  },
+  {
+   "at_ms": 3500,
+   "lines": [
+    "CUMIN"
+   ]
+  }
+ ]
+}

@@ -36,6 +36,7 @@ class _Script {
     TurnPipeline(
       client: client,
       prompts: PromptBuilder(FilePromptAssets()),
+      busyRetryDelay: Duration.zero,
       guards: Guards(
         banned: BannedPhrases.fromJson(
           jsonDecode(
@@ -212,7 +213,7 @@ void main() {
         expect(a.intent.type, IntentType.repair);
         expect(a.isClarification, isFalse);
         expect(a.text, startsWith('Jar 4, closer to you, on the right.'));
-        expect(a.text, contains('I read it on the label.'));
+        expect(a.text, contains('I read this directly.'));
         expect(
           s.lastRequestText,
           contains('"description":"the jar closer to you"'),

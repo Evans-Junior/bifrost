@@ -5,7 +5,11 @@ import 'package:flutter/services.dart';
 /// Sight-assuming wording for guard 7, loaded from
 /// `assets/guards/banned_phrases.json` (English and French together).
 class BannedPhrases {
-  const BannedPhrases({this.strip = const [], this.dropSentence = const []});
+  const BannedPhrases({
+    this.strip = const [],
+    this.dropSentence = const [],
+    this.chatter = const [],
+  });
 
   static const empty = BannedPhrases();
 
@@ -15,11 +19,15 @@ class BannedPhrases {
   /// Phrases whose whole sentence is removed ("check the label").
   final List<String> dropSentence;
 
+  /// Filler whose whole sentence is removed ("let me know if…").
+  final List<String> chatter;
+
   factory BannedPhrases.fromJson(Map<String, dynamic> j) => BannedPhrases(
     strip: [for (final s in j['strip'] as List? ?? const []) s as String],
     dropSentence: [
       for (final s in j['drop_sentence'] as List? ?? const []) s as String,
     ],
+    chatter: [for (final s in j['chatter'] as List? ?? const []) s as String],
   );
 
   static Future<BannedPhrases> load([AssetBundle? bundle]) async {
@@ -39,7 +47,12 @@ class BannedPhrases {
       for (final p in strip) {
         sentence = sentence.replaceAll(_find(p), ' ');
       }
-      if (dropSentence.any((p) => _find(p).hasMatch(sentence))) continue;
+      if ([
+        ...dropSentence,
+        ...chatter,
+      ].any((p) => _find(p).hasMatch(sentence))) {
+        continue;
+      }
       final tidy = _tidy(sentence);
       if (tidy.isNotEmpty) kept.add(tidy);
     }

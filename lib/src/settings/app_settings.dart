@@ -1,5 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+import 'feedback_settings.dart';
+
+export 'feedback_settings.dart';
+
 /// The two app languages. Speech-to-text, text-to-speech, templates and
 /// prompts all follow this value.
 enum AppLanguage {
@@ -80,6 +84,9 @@ class AppSettings {
     this.logServerUrl = '',
     this.logToken = '',
     this.participant = 'dev',
+    this.feedback = const FeedbackSettings(),
+    this.thresholds = const VisionThresholds(),
+    this.onboardingDone = false,
   });
 
   final String modelBaseUrl;
@@ -103,6 +110,15 @@ class AppSettings {
   /// Participant code recorded in every log entry.
   final String participant;
 
+  /// Earcons and vibration guidance.
+  final FeedbackSettings feedback;
+
+  /// Aiming, glare and blur thresholds (developer section).
+  final VisionThresholds thresholds;
+
+  /// True once the spoken first-run setup has been completed.
+  final bool onboardingDone;
+
   /// True when the app has enough to call a model server.
   bool get isServerConfigured =>
       modelBaseUrl.trim().isNotEmpty && modelName.trim().isNotEmpty;
@@ -120,6 +136,9 @@ class AppSettings {
     String? logServerUrl,
     String? logToken,
     String? participant,
+    FeedbackSettings? feedback,
+    VisionThresholds? thresholds,
+    bool? onboardingDone,
   }) {
     return AppSettings(
       modelBaseUrl: modelBaseUrl ?? this.modelBaseUrl,
@@ -134,6 +153,9 @@ class AppSettings {
       logServerUrl: logServerUrl ?? this.logServerUrl,
       logToken: logToken ?? this.logToken,
       participant: participant ?? this.participant,
+      feedback: feedback ?? this.feedback,
+      thresholds: thresholds ?? this.thresholds,
+      onboardingDone: onboardingDone ?? this.onboardingDone,
     );
   }
 }

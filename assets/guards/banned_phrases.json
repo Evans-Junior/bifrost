@@ -1,5 +1,5 @@
 {
-  "_comment": "Guard 7. Sight-assuming wording removed from model text before it is spoken (rule 10). 'strip' removes just the phrase; 'drop_sentence' removes the whole sentence that contains it. Case-insensitive.",
+  "_comment": "Guard 7. Wording removed from model text before it is spoken. 'strip' removes just the phrase; 'drop_sentence' removes the whole sentence (sight-assuming wording, rule 10); 'chatter' removes whole sentences of filler that make replies longer without adding facts (rule 9). Case-insensitive.",
   "strip": [
     "as you can see",
     "as you can clearly see",
@@ -38,5 +38,28 @@
     "regarde bien",
     "regardez l'étiquette",
     "regardez bien"
+  ],
+  "chatter": [
+    "let me know if",
+    "let me know when",
+    "feel free to",
+    "would you like me to",
+    "do you want me to",
+    "if you want me to",
+    "if you'd like",
+    "if you would like",
+    "i hope this helps",
+    "happy to help",
+    "is there anything else",
+    "anything else i can",
+    "dis-moi si",
+    "fais-moi savoir",
+    "n'hésite pas",
+    "veux-tu que je",
+    "voulez-vous que je",
+    "si tu veux que je",
+    "si tu le souhaites",
+    "j'espère que cela aide",
+    "autre chose que je peux"
   ]
 }

@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// No description provided for @confidenceRead.
   ///
   /// In en, this message translates to:
-  /// **'I read it on the label.'**
+  /// **'I read this directly.'**
   String get confidenceRead;
 
   /// No description provided for @confidenceThink.
@@ -494,12 +494,6 @@ abstract class AppLocalizations {
   /// **'Stopped.'**
   String get stopped;
 
-  /// No description provided for @watchNotReady.
-  ///
-  /// In en, this message translates to:
-  /// **'Watch mode isn\'t available yet.'**
-  String get watchNotReady;
-
   /// No description provided for @itemNoun.
   ///
   /// In en, this message translates to:
@@ -535,6 +529,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No items labelled yet. Ask me what\'s in front of you.'**
   String get statusNoItems;
+
+  /// No description provided for @referentScene.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall view.'**
+  String get referentScene;
+
+  /// No description provided for @correction.
+  ///
+  /// In en, this message translates to:
+  /// **'Correction:'**
+  String get correction;
+
+  /// No description provided for @aimNothingInView.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in view. Sweep slowly.'**
+  String get aimNothingInView;
+
+  /// No description provided for @glare.
+  ///
+  /// In en, this message translates to:
+  /// **'Glare. Tilt it away from the light.'**
+  String get glare;
+
+  /// No description provided for @blur.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold it still.'**
+  String get blur;
+
+  /// No description provided for @watchOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Want me to tell you when I can read it?'**
+  String get watchOffer;
+
+  /// No description provided for @watchStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching. Turn it slowly.'**
+  String get watchStarted;
+
+  /// No description provided for @watchTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'I still can\'t read it. Try turning it slowly the other way.'**
+  String get watchTimeout;
+
+  /// No description provided for @watchDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Okay.'**
+  String get watchDeclined;
+
+  /// No description provided for @dirLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'left'**
+  String get dirLeft;
+
+  /// No description provided for @dirRight.
+  ///
+  /// In en, this message translates to:
+  /// **'right'**
+  String get dirRight;
+
+  /// No description provided for @dirUp.
+  ///
+  /// In en, this message translates to:
+  /// **'up'**
+  String get dirUp;
+
+  /// No description provided for @dirDown.
+  ///
+  /// In en, this message translates to:
+  /// **'down'**
+  String get dirDown;
+
+  /// No description provided for @dirFullView.
+  ///
+  /// In en, this message translates to:
+  /// **'there'**
+  String get dirFullView;
+
+  /// No description provided for @learnVibrationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the vibrations'**
+  String get learnVibrationsTitle;
+
+  /// No description provided for @vibLeftMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'One long pulse: go left. Long means left.'**
+  String get vibLeftMeaning;
+
+  /// No description provided for @vibRightMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Two short pulses: go right. Right is rapid.'**
+  String get vibRightMeaning;
+
+  /// No description provided for @vibUpMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Three short taps: go up. Up has more taps.'**
+  String get vibUpMeaning;
+
+  /// No description provided for @vibDownMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Two long pulses: go down. Down is heavy.'**
+  String get vibDownMeaning;
+
+  /// No description provided for @vibFullViewMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'One strong buzz: stop, you\'re there.'**
+  String get vibFullViewMeaning;
+
+  /// No description provided for @vibPlayAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Play each pattern'**
+  String get vibPlayAll;
+
+  /// No description provided for @vibStartPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Start practice'**
+  String get vibStartPractice;
+
+  /// No description provided for @vibWhichDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Which direction was that?'**
+  String get vibWhichDirection;
+
+  /// No description provided for @vibCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct.'**
+  String get vibCorrect;
+
+  /// No description provided for @vibWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Not quite. That was {direction}.'**
+  String vibWrong(String direction);
+
+  /// No description provided for @vibReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Four in a row. You\'re ready.'**
+  String get vibReady;
+
+  /// No description provided for @vibScore.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct} correct in a row'**
+  String vibScore(int correct);
+
+  /// No description provided for @vibPlayAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play again'**
+  String get vibPlayAgain;
+
+  /// No description provided for @vibUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t vibrate.'**
+  String get vibUnsupported;
+
+  /// No description provided for @learnSoundsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the sounds'**
+  String get learnSoundsTitle;
+
+  /// No description provided for @earconListenMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening started'**
+  String get earconListenMeaning;
+
+  /// No description provided for @earconReadMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'I read it'**
+  String get earconReadMeaning;
+
+  /// No description provided for @earconThinkMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'I think so'**
+  String get earconThinkMeaning;
+
+  /// No description provided for @earconCantSeeMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t see it'**
+  String get earconCantSeeMeaning;
+
+  /// No description provided for @earconClarifyMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m asking which one you mean'**
+  String get earconClarifyMeaning;
+
+  /// No description provided for @earconWatchMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Still watching'**
+  String get earconWatchMeaning;
+
+  /// No description provided for @earconErrorMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Error or no connection'**
+  String get earconErrorMeaning;
+
+  /// No description provided for @settingsFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds and vibration'**
+  String get settingsFeedback;
+
+  /// No description provided for @settingsEarcons.
+  ///
+  /// In en, this message translates to:
+  /// **'Earcons'**
+  String get settingsEarcons;
+
+  /// No description provided for @settingsVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration guidance'**
+  String get settingsVibration;
+
+  /// No description provided for @settingsIntensity.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration intensity'**
+  String get settingsIntensity;
+
+  /// No description provided for @intensityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get intensityLow;
+
+  /// No description provided for @intensityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get intensityMedium;
+
+  /// No description provided for @intensityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get intensityHigh;
+
+  /// No description provided for @settingsVibrateSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate in search tasks'**
+  String get settingsVibrateSearch;
+
+  /// No description provided for @settingsSlowPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow patterns'**
+  String get settingsSlowPatterns;
+
+  /// No description provided for @settingsSpeakDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Also speak direction'**
+  String get settingsSpeakDirection;
+
+  /// No description provided for @settingsRedoOnboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo the setup'**
+  String get settingsRedoOnboarding;
+
+  /// No description provided for @settingsDeveloper.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer: thresholds'**
+  String get settingsDeveloper;
+
+  /// No description provided for @onbWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to BIFROST. This setup takes about a minute.'**
+  String get onbWelcome;
+
+  /// No description provided for @onbLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a language. Choisis une langue.'**
+  String get onbLanguage;
+
+  /// No description provided for @onbVision.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you blind, or do you have low vision?'**
+  String get onbVision;
+
+  /// No description provided for @onbPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'How should I give positions? Clock face, like at your 2 o\'clock, or left and right?'**
+  String get onbPosition;
+
+  /// No description provided for @onbRate.
+  ///
+  /// In en, this message translates to:
+  /// **'This is my speaking speed. Choose faster, slower, or keep it.'**
+  String get onbRate;
+
+  /// No description provided for @onbFaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Faster'**
+  String get onbFaster;
+
+  /// No description provided for @onbSlower.
+  ///
+  /// In en, this message translates to:
+  /// **'Slower'**
+  String get onbSlower;
+
+  /// No description provided for @onbKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep this speed'**
+  String get onbKeep;
+
+  /// No description provided for @onbEarcons.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want short sounds that tell you how sure I am?'**
+  String get onbEarcons;
+
+  /// No description provided for @onbVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want vibrations that guide you toward objects?'**
+  String get onbVibration;
+
+  /// No description provided for @onbLearnNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn the vibrations now?'**
+  String get onbLearnNow;
+
+  /// No description provided for @onbPracticeHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice. Hold the big button, say anything, then let go.'**
+  String get onbPracticeHold;
+
+  /// No description provided for @onbPracticeHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'I heard: {words}.'**
+  String onbPracticeHeard(String words);
+
+  /// No description provided for @onbPracticeEarcon.
+  ///
+  /// In en, this message translates to:
+  /// **'This sound means: I read it.'**
+  String get onbPracticeEarcon;
+
+  /// No description provided for @onbPracticeAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Now point the camera at any object, hold the button and ask: what is this?'**
+  String get onbPracticeAsk;
+
+  /// No description provided for @onbDone.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all set.'**
+  String get onbDone;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @holdToPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to practise'**
+  String get holdToPractice;
+
+  /// No description provided for @watchQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What does the label say?'**
+  String get watchQuestion;
 }
 
 class _AppLocalizationsDelegate

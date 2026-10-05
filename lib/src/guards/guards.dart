@@ -268,26 +268,75 @@ class Guards {
     );
   }
 
-  /// Guard 8. If the spoken reply is over [maxWords], keep the referent,
-  /// observation and confidence phrase, and move the rest to `detail` so the
-  /// user can ask for it with MORE.
+  /// Guard 8. If the spoken reply is over [maxWords], it is shortened in
+  /// steps, and everything removed goes to `detail` for MORE:
   ///
-  /// For `CANT_SEE` and `THINK` the next step is the physical action that
-  /// gets better evidence (rule 4, script step 6), so it is never moved.
+  /// 1. the next step moves out, except for `THINK` and `CANT_SEE`, where it
+  ///    is the physical action that gets better evidence (rule 4);
+  /// 2. a multi-sentence observation keeps only its first sentence;
+  /// 3. a long single sentence is cut at the last clause boundary (comma,
+  ///    semicolon, "and"/"et") that fits.
+  ///
+  /// The referent and confidence phrase are always kept.
   SpokenReply lengthCap(SpokenReply reply, List<GuardEvent> log) {
     final before = reply.wordCount;
-    if (before <= maxWords || reply.nextStepIsRequired) return reply;
-    if (reply.nextStep.isEmpty) return reply;
-    final moved = reply.copyWith(
-      nextStep: '',
-      detail: [
-        reply.nextStep,
-        reply.detail,
-      ].where((s) => s.isNotEmpty).join(' '),
+    if (before <= maxWords) return reply;
+    var r = reply;
+    final moved = <String>[];
+
+    if (!r.nextStepIsRequired && r.nextStep.isNotEmpty) {
+      moved.add(r.nextStep);
+      r = r.copyWith(nextStep: '');
+    }
+    if (r.wordCount > maxWords) {
+      final sentences = _sentences(r.observation);
+      if (sentences.length > 1) {
+        moved.insert(0, sentences.skip(1).join(' '));
+        r = r.copyWith(observation: sentences.first);
+      }
+    }
+    if (r.wordCount > maxWords) {
+      final budget =
+          maxWords - (r.wordCount - SpokenReply.countWords(r.observation));
+      final cut = _cutAtClause(r.observation, budget);
+      if (cut != null) {
+        moved.insert(0, cut.$2);
+        r = r.copyWith(observation: cut.$1);
+      }
+    }
+    if (moved.isEmpty) return reply;
+    r = r.copyWith(
+      detail: [...moved, reply.detail].where((s) => s.isNotEmpty).join(' '),
     );
-    log.add(
-      GuardEvent('length_cap', '$before words', '${moved.wordCount} words'),
-    );
-    return moved;
+    log.add(GuardEvent('length_cap', '$before words', '${r.wordCount} words'));
+    return r;
   }
+
+  static List<String> _sentences(String text) => text
+      .trim()
+      .split(RegExp(r'(?<=[.!?])\s+'))
+      .where((s) => s.isNotEmpty)
+      .toList();
+
+  /// Splits [sentence] at the last clause boundary that leaves at most
+  /// [budget] words (and at least 4) in the first part. Returns
+  /// (kept sentence, moved remainder) or null if there is no such boundary.
+  static (String, String)? _cutAtClause(String sentence, int budget) {
+    if (budget < 4) return null;
+    final boundary = RegExp(r'[,;]\s+|\s+(?:and|et)\s+');
+    (String, String)? best;
+    for (final m in boundary.allMatches(sentence)) {
+      final head = sentence.substring(0, m.start).trim();
+      final words = SpokenReply.countWords(head);
+      if (words < 4) continue;
+      if (words > budget) break;
+      final tail = sentence.substring(m.end).trim();
+      if (tail.isEmpty) continue;
+      best = ('$head.', _capitalize(tail));
+    }
+    return best;
+  }
+
+  static String _capitalize(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }

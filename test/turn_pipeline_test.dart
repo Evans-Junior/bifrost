@@ -9,8 +9,11 @@ import 'helpers.dart';
 
 const _spices = ['cumin', 'paprika', 'oregano', 'chili', 'cinnamon'];
 
-TurnPipeline _pipeline(FakeModelClient client) =>
-    TurnPipeline(client: client, prompts: PromptBuilder(FilePromptAssets()));
+TurnPipeline _pipeline(FakeModelClient client) => TurnPipeline(
+  client: client,
+  prompts: PromptBuilder(FilePromptAssets()),
+  busyRetryDelay: Duration.zero,
+);
 
 void main() {
   group('Phase 1 acceptance (fixtures)', () {
@@ -97,11 +100,25 @@ void main() {
       expect(o.spokenText, l10nFor('en').cannotConnect);
     });
 
-    test('rate limit says the server is busy, not offline', () async {
-      final client = FakeModelClient([ModelBusyException('HTTP 429')]);
+    test('a busy server is retried once, then reported as busy', () async {
+      final client = FakeModelClient([
+        ModelBusyException('HTTP 429'),
+        ModelBusyException('HTTP 429'),
+      ]);
       final o = await _pipeline(client).run(testSettings, askInput());
+      expect(client.requests, hasLength(2));
       expect(o.failure, TurnFailure.busy);
       expect(o.spokenText, l10nFor('en').serverBusy);
+    });
+
+    test('a busy server that recovers on the retry answers normally', () async {
+      final client = FakeModelClient([
+        ModelBusyException('HTTP 429'),
+        modelFixture('label_away_clean.json'),
+      ]);
+      final o = await _pipeline(client).run(testSettings, askInput());
+      expect(o.isSuccess, isTrue);
+      expect(o.spokenText, startsWith('Jar 1'));
     });
 
     test('French settings give French status lines', () async {

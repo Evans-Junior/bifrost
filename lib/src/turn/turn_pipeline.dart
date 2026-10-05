@@ -6,6 +6,7 @@ import '../../l10n/gen/app_localizations.dart';
 import '../conversation/object_registry.dart';
 import '../guards/guards.dart';
 import '../intent/intent_classifier.dart';
+import '../model/early_referent.dart';
 import '../model/model_client.dart';
 import '../model/prompt_builder.dart';
 import '../model/response_parser.dart';
@@ -26,7 +27,12 @@ class TurnInput {
     required this.intent,
     required this.registry,
     this.ocr = OcrResult.empty,
+    this.onEarlyReferent,
   });
+
+  /// Called with "Jar 4, in your right hand." as soon as the referent can
+  /// be spoken ahead of the full answer (Section 9). Null disables it.
+  final void Function(String phrase)? onEarlyReferent;
 
   final TurnContext context;
   final IntentType intent;
@@ -48,10 +54,19 @@ class TurnOutcome {
     this.rawModelText = const [],
     this.guardEvents = const [],
     this.failure,
+    this.earlyReferent,
+    this.spokenAfterEarly,
   });
 
   /// What BIFROST says. Always composed from templates.
   final String spokenText;
+
+  /// The referent phrase already spoken during streaming, if any.
+  final String? earlyReferent;
+
+  /// What to say after [earlyReferent]: the rest of the answer, or
+  /// "Correction: …" with the full answer if the referent changed.
+  final String? spokenAfterEarly;
   final SpokenReply? reply;
 
   /// The guarded response, with registry ids and labels.
@@ -79,7 +94,12 @@ class TurnPipeline {
     required this.prompts,
     this.parser = const ResponseParser(),
     this.guards = const Guards(),
+    this.busyRetryDelay = const Duration(seconds: 2),
   });
+
+  /// Wait before the single retry after HTTP 429/503 (a busy or
+  /// rate-limited server). The turn's hard timeout still applies.
+  final Duration busyRetryDelay;
 
   final ModelClient client;
   final PromptBuilder prompts;
@@ -126,7 +146,23 @@ class TurnPipeline {
     List<String> raws,
   ) async {
     final messages = await prompts.messages(settings, input.context);
-    var response = await _attempt(settings, messages, token, raws);
+    String? early;
+    final reader = input.onEarlyReferent == null ? null : EarlyReferentReader();
+    void onEarly(EarlyFields f) {
+      final phrase = _earlyPhrase(f, input, l10n);
+      if (phrase == null) return;
+      early = phrase;
+      input.onEarlyReferent!(phrase);
+    }
+
+    var response = await _attempt(
+      settings,
+      messages,
+      token,
+      raws,
+      reader: reader,
+      onEarly: onEarly,
+    );
     String? retryWith;
     if (response == null) {
       retryWith = await prompts.retryInstruction(settings);
@@ -144,7 +180,56 @@ class TurnPipeline {
     if (response == null) {
       return _fail(TurnFailure.lostTrack, l10n.lostTrack, raws);
     }
-    return answer(response, input, l10n, raws);
+    final outcome = answer(response, input, l10n, raws);
+    return early == null ? outcome : _afterEarly(outcome, early!, l10n);
+  }
+
+  /// The referent phrase to speak early, or null if Section 9 says wait:
+  /// only when no clarification is needed, for ASK or REPAIR (never
+  /// CHALLENGE), and when the object is known or has a location.
+  String? _earlyPhrase(EarlyFields f, TurnInput input, AppLocalizations l10n) {
+    final ref = f.referent;
+    if (f.needsClarification || ref == null) return null;
+    if (input.intent != IntentType.ask && input.intent != IntentType.repair) {
+      return null;
+    }
+    final known = input.registry.byId(ref.id);
+    final location = guards.banned.clean(ref.location);
+    if (known == null && location.trim().isEmpty) return null;
+    final label =
+        known?.label ??
+        input.registry
+            .copy()
+            .resolve(modelId: ref.id, modelLabel: ref.label)
+            .label;
+    return SpeechComposer(
+      l10n,
+    ).referentPhrase(ref.copyWith(label: label, location: location));
+  }
+
+  /// Splits the final answer around the referent already spoken.
+  TurnOutcome _afterEarly(TurnOutcome o, String early, AppLocalizations l10n) {
+    final reply = o.reply;
+    String rest;
+    if (reply == null) {
+      rest = o.spokenText;
+    } else if (reply.referent == early) {
+      rest = reply.copyWithoutReferent().text;
+    } else {
+      rest = '${l10n.correction} ${reply.text}';
+    }
+    return TurnOutcome(
+      spokenText: o.spokenText,
+      reply: o.reply,
+      response: o.response,
+      registry: o.registry,
+      challenge: o.challenge,
+      rawModelText: o.rawModelText,
+      guardEvents: o.guardEvents,
+      failure: o.failure,
+      earlyReferent: early,
+      spokenAfterEarly: rest,
+    );
   }
 
   /// Applies guards and registry updates, then composes speech, for an
@@ -290,11 +375,32 @@ class TurnPipeline {
       ..confidenceReason = r.confidenceReason;
   }
 
+  /// One model call. A busy server (429/503) gets one retry after
+  /// [busyRetryDelay]; a second busy reply is reported as busy.
   Future<VlmResponse?> _attempt(
     AppSettings settings,
     List<Map<String, dynamic>> messages,
     CancelToken token,
+    List<String> raws, {
+    EarlyReferentReader? reader,
+    void Function(EarlyFields)? onEarly,
+  }) async {
+    try {
+      return await _call(settings, messages, token, raws, reader, onEarly);
+    } on ModelBusyException {
+      await Future<void>.delayed(busyRetryDelay);
+      if (token.isCancelled) rethrow;
+      return _call(settings, messages, token, raws, reader, onEarly);
+    }
+  }
+
+  Future<VlmResponse?> _call(
+    AppSettings settings,
+    List<Map<String, dynamic>> messages,
+    CancelToken token,
     List<String> raws,
+    EarlyReferentReader? reader,
+    void Function(EarlyFields)? onEarly,
   ) async {
     final buffer = StringBuffer();
     await for (final delta in client.streamChat(
@@ -303,6 +409,8 @@ class TurnPipeline {
       cancel: token,
     )) {
       buffer.write(delta);
+      final early = reader?.feed(delta);
+      if (early != null) onEarly?.call(early);
     }
     final raw = buffer.toString();
     raws.add(raw);

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -29,6 +31,9 @@ class SettingsRepository {
   static const _logServerUrl = 'LOG_SERVER_URL';
   static const _logToken = 'LOG_TOKEN';
   static const _participant = 'PARTICIPANT';
+  static const _feedback = 'FEEDBACK';
+  static const _thresholds = 'THRESHOLDS';
+  static const _onboardingDone = 'ONBOARDING_DONE';
 
   Future<AppSettings> load() async =>
       merge(await _storage.readAll(), await _envLoader());
@@ -58,7 +63,19 @@ class SettingsRepository {
       logServerUrl: pick(_logServerUrl) ?? d.logServerUrl,
       logToken: pick(_logToken) ?? d.logToken,
       participant: pick(_participant) ?? d.participant,
+      feedback: FeedbackSettings.fromJson(_json(stored[_feedback])),
+      thresholds: VisionThresholds.fromJson(_json(stored[_thresholds])),
+      onboardingDone: stored[_onboardingDone] == 'true',
     );
+  }
+
+  static Map<String, dynamic> _json(String? s) {
+    if (s == null || s.isEmpty) return const {};
+    try {
+      return jsonDecode(s) as Map<String, dynamic>;
+    } on FormatException {
+      return const {};
+    }
   }
 
   Future<void> save(AppSettings s) async {
@@ -75,6 +92,9 @@ class SettingsRepository {
       _logServerUrl: s.logServerUrl.trim(),
       _logToken: s.logToken,
       _participant: s.participant.trim(),
+      _feedback: jsonEncode(s.feedback.toJson()),
+      _thresholds: jsonEncode(s.thresholds.toJson()),
+      _onboardingDone: '${s.onboardingDone}',
     };
     for (final e in values.entries) {
       await _storage.write(key: e.key, value: e.value);
