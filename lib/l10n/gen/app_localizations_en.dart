@@ -486,4 +486,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchQuestion => 'What does the label say?';
+
+  @override
+  String get modelUnavailable =>
+      'The server doesn\'t offer this model. The model name in Settings needs changing.';
 }

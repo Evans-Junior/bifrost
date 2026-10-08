@@ -111,6 +111,13 @@ void main() {
       expect(o.spokenText, l10nFor('en').serverBusy);
     });
 
+    test('a missing model (404) says so instead of "can\'t connect"', () async {
+      final client = FakeModelClient([ModelUnavailableException('HTTP 404')]);
+      final o = await _pipeline(client).run(testSettings, askInput());
+      expect(o.failure, TurnFailure.unavailable);
+      expect(o.spokenText, l10nFor('en').modelUnavailable);
+    });
+
     test('a busy server that recovers on the retry answers normally', () async {
       final client = FakeModelClient([
         ModelBusyException('HTTP 429'),

@@ -69,6 +69,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final s = await _settings;
     final l10n = lookupAppLocalizations(s.language.locale);
     if (_step == OnboardingStep.language) await _speak(l10n.onbWelcome);
+    if (_step == OnboardingStep.practiceAsk) {
+      // The practice question needs a photo; only the home screen opens the
+      // camera otherwise.
+      await ref.read(turnControllerProvider.notifier).startCamera();
+    }
     await _speak(_prompt(l10n));
     if (_step == OnboardingStep.practiceEarcon) {
       await ref.read(earconPlayerProvider).play(Earcon.read, enabled: true);

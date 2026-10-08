@@ -26,6 +26,17 @@ class ModelBusyException implements Exception {
   String toString() => 'ModelBusyException: $message';
 }
 
+/// Thrown when the server does not offer the configured model (HTTP 404),
+/// e.g. a wrong model name or a withdrawn free tier.
+class ModelUnavailableException implements Exception {
+  ModelUnavailableException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'ModelUnavailableException: $message';
+}
+
 /// Sends chat requests to the vision-language model.
 abstract class ModelClient {
   /// Streams text deltas of the model's reply. Cancelled through [cancel].
@@ -106,6 +117,7 @@ class OpenAiCompatibleClient implements ModelClient {
       if (status == 429 || status == 503) {
         throw ModelBusyException('HTTP $status');
       }
+      if (status == 404) throw ModelUnavailableException('HTTP 404');
       throw ModelConnectionException(
         status != null ? 'HTTP $status' : (e.message ?? e.type.name),
       );
@@ -151,6 +163,7 @@ class SseChatDecoder {
       if (error != null) {
         final code = error is Map ? error['code'] : null;
         if (code == 429 || code == 503) throw ModelBusyException('$error');
+        if (code == 404) throw ModelUnavailableException('$error');
         throw ModelConnectionException('$error');
       }
       final choices = json['choices'] as List?;

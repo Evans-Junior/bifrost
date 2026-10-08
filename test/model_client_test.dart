@@ -52,6 +52,16 @@ void main() {
       );
     });
 
+    test('model-not-found error event throws unavailable', () async {
+      final lines = Stream.value(
+        'data: {"error": {"code": 404, "message": "unavailable for free"}}',
+      );
+      expect(
+        SseChatDecoder.decode(lines).join(),
+        throwsA(isA<ModelUnavailableException>()),
+      );
+    });
+
     test('server error event throws a connection error', () async {
       final lines = Stream.value('data: {"error": {"message": "overloaded"}}');
       expect(

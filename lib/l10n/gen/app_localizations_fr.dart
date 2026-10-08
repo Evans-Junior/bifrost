@@ -495,4 +495,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get watchQuestion => 'Que dit l\'étiquette ?';
+
+  @override
+  String get modelUnavailable =>
+      'Le serveur ne propose pas ce modèle. Il faut changer le nom du modèle dans les réglages.';
 }

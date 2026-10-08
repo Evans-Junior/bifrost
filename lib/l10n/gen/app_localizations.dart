@@ -955,6 +955,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What does the label say?'**
   String get watchQuestion;
+
+  /// No description provided for @modelUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The server doesn\'t offer this model. The model name in Settings needs changing.'**
+  String get modelUnavailable;
 }
 
 class _AppLocalizationsDelegate

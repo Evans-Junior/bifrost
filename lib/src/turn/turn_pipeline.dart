@@ -18,7 +18,14 @@ import '../vision/ocr_result.dart';
 
 /// Why a turn did not produce an answer. Each maps to an honest spoken
 /// status line (rule 12).
-enum TurnFailure { timeout, lostTrack, connection, busy, cancelled }
+enum TurnFailure {
+  timeout,
+  lostTrack,
+  connection,
+  busy,
+  unavailable,
+  cancelled,
+}
 
 /// Everything one model turn needs.
 class TurnInput {
@@ -133,6 +140,8 @@ class TurnPipeline {
       return _fail(TurnFailure.connection, l10n.cannotConnect, raws);
     } on ModelBusyException {
       return _fail(TurnFailure.busy, l10n.serverBusy, raws);
+    } on ModelUnavailableException {
+      return _fail(TurnFailure.unavailable, l10n.modelUnavailable, raws);
     } on ModelConnectionException {
       return _fail(TurnFailure.connection, l10n.cannotConnect, raws);
     }

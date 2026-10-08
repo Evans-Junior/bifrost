@@ -142,5 +142,6 @@
   "next": "Suivant",
   "skip": "Passer",
   "holdToPractice": "Maintenir pour s'exercer",
-  "watchQuestion": "Que dit l'étiquette ?"
+  "watchQuestion": "Que dit l'étiquette ?",
+  "modelUnavailable": "Le serveur ne propose pas ce modèle. Il faut changer le nom du modèle dans les réglages."
 }

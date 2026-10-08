@@ -256,5 +256,6 @@
   "next": "Next",
   "skip": "Skip",
   "holdToPractice": "Hold to practise",
-  "watchQuestion": "What does the label say?"
+  "watchQuestion": "What does the label say?",
+  "modelUnavailable": "The server doesn't offer this model. The model name in Settings needs changing."
 }
