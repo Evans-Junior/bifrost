@@ -2,7 +2,7 @@
 
 BIFROST is a voice-first assistant (iOS and Android) for blind and low-vision users. It follows the team's project specification.
 
-**Status:** Phases 1–4 are built and tested on fixtures; Phases 1–2 have also been tested on a real iPhone. See `../ARCHITECTURE.md` for the full design.
+**Status:** Phases 1–4 are built and tested on fixtures; Phases 1–2 have also been tested on a real iPhone. See [ARCHITECTURE.md](ARCHITECTURE.md) for the full design.
 
 ## Run
 

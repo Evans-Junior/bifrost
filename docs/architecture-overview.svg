@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 860" width="1280" height="860" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b4252"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2f5bd3"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f7a4d"/>
+    </marker>
+    <style>
+      .title { font-size: 26px; font-weight: 700; fill: #1b1f27; }
+      .subtitle { font-size: 14px; fill: #5d6470; }
+      .zoneTitle { font-size: 17px; font-weight: 700; fill: #1b1f27; }
+      .zoneSub { font-size: 12.5px; fill: #5d6470; }
+      .boxTitle { font-size: 14px; font-weight: 700; fill: #1b1f27; }
+      .boxText { font-size: 12px; fill: #3b4252; }
+      .mono { font-family: Menlo, Consolas, monospace; font-size: 11px; fill: #5d6470; }
+      .edge { font-size: 12px; fill: #1b1f27; font-weight: 600; }
+      .edgeSub { font-size: 11.5px; fill: #5d6470; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="860" fill="#ffffff"/>
+  <text x="40" y="48" class="title">BIFROST system architecture</text>
+  <text x="40" y="72" class="subtitle">Everything on the left runs on the phone. Only two things leave it: one resized photo plus text per model turn, and text-only turn logs.</text>
+
+  <!-- ============ PHONE ============ -->
+  <rect x="30" y="95" width="760" height="740" rx="22" fill="#f4f6fa" stroke="#9aa3b2" stroke-width="2"/>
+  <text x="54" y="126" class="zoneTitle">Phone · Flutter app (bifrost/)</text>
+  <text x="54" y="146" class="zoneSub">iOS 15.5+ and Android 7+ · Riverpod state · rear camera only · en-CA / fr-CA</text>
+
+  <!-- UI -->
+  <rect x="54" y="164" width="712" height="74" rx="12" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="72" y="188" class="boxTitle">UI layer</text>
+  <text x="72" y="208" class="boxText">HomeScreen: full-screen hold-to-talk button over the camera preview, live status for screen readers</text>
+  <text x="72" y="226" class="boxText">SettingsScreen: server, voice, language, profile, study fields (fields set in .env are locked)</text>
+
+  <!-- TurnController -->
+  <rect x="54" y="254" width="712" height="66" rx="12" fill="#fff7e6" stroke="#d4a017" stroke-width="1.5"/>
+  <text x="72" y="278" class="boxTitle">TurnController (turn/turn_controller.dart)</text>
+  <text x="72" y="298" class="boxText">One turn at a time · a new press cancels speech and the turn in flight · "Checking…" after 1.5 s · timings for the log</text>
+  <text x="72" y="313" class="mono">listen → engine → earcon + speech queue → log · PerceptionController runs the stream</text>
+
+  <!-- Conversation engine -->
+  <rect x="54" y="336" width="350" height="226" rx="12" fill="#eef3ff" stroke="#2f5bd3" stroke-width="1.5"/>
+  <text x="72" y="360" class="boxTitle">ConversationEngine</text>
+  <text x="72" y="378" class="mono">conversation/conversation_engine.dart</text>
+  <text x="72" y="402" class="boxText">• IntentClassifier (assets/intents/*.json)</text>
+  <text x="72" y="422" class="boxText">• Answers locally: STATUS, REPEAT, MORE, STOP</text>
+  <text x="72" y="442" class="boxText">• ObjectRegistry: "jar 2" stays jar 2 (guard 6)</text>
+  <text x="72" y="462" class="boxText">• TaskMemory: done / left lists</text>
+  <text x="72" y="482" class="boxText">• Repair and challenge context, last 6 turns</text>
+  <text x="72" y="502" class="boxText">• Asks the pipeline only when the model</text>
+  <text x="84" y="520" class="boxText">is needed (ASK, START_TASK, REPAIR,</text>
+  <text x="84" y="538" class="boxText">CHALLENGE)</text>
+
+  <!-- Turn pipeline -->
+  <rect x="416" y="336" width="350" height="226" rx="12" fill="#eef3ff" stroke="#2f5bd3" stroke-width="1.5"/>
+  <text x="434" y="360" class="boxTitle">TurnPipeline</text>
+  <text x="434" y="378" class="mono">turn/turn_pipeline.dart</text>
+  <text x="434" y="402" class="boxText">1. PromptBuilder (assets/prompts/*)</text>
+  <text x="434" y="422" class="boxText">2. ModelClient: streamed HTTP, cancel, timeout</text>
+  <text x="434" y="442" class="boxText">3. ResponseParser: JSON schema (freezed)</text>
+  <text x="434" y="462" class="boxText">   one retry if invalid</text>
+  <text x="434" y="482" class="boxText">4. Guards 5 → 6 → 1 → 2 → 3 → 4 → 7</text>
+  <text x="434" y="502" class="boxText">5. Registry update</text>
+  <text x="434" y="522" class="boxText">6. SpeechComposer (lib/l10n/*.arb)</text>
+  <text x="434" y="542" class="boxText">7. Guard 8 (25-word cap)</text>
+
+  <!-- Device services -->
+  <text x="54" y="590" class="zoneTitle" style="font-size:14px">On-device services (nothing here leaves the phone)</text>
+  <rect x="54" y="602" width="134" height="92" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="66" y="624" class="boxTitle">SttService</text>
+  <text x="66" y="643" class="boxText">speech_to_text</text>
+  <text x="66" y="661" class="boxText">hold-to-talk,</text>
+  <text x="66" y="679" class="boxText">fr-CA → fr-FR</text>
+
+  <rect x="198" y="602" width="134" height="92" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="210" y="624" class="boxTitle">Output</text>
+  <text x="210" y="643" class="boxText">voice (flutter_tts),</text>
+  <text x="210" y="661" class="boxText">earcons, vibration</text>
+  <text x="210" y="679" class="boxText">guidance patterns</text>
+
+  <rect x="342" y="602" width="134" height="92" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="354" y="624" class="boxTitle">CameraService</text>
+  <text x="354" y="643" class="boxText">rear camera only,</text>
+  <text x="354" y="661" class="boxText">stills + ~5 fps</text>
+  <text x="354" y="679" class="boxText">stream, nothing kept</text>
+
+  <rect x="486" y="602" width="134" height="92" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="498" y="624" class="boxTitle">ImagePrep</text>
+  <text x="498" y="643" class="boxText">isolate: 1024 px,</text>
+  <text x="498" y="661" class="boxText">JPEG 80,</text>
+  <text x="498" y="679" class="boxText">orientation fixed</text>
+
+  <rect x="630" y="602" width="136" height="92" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="642" y="624" class="boxTitle">ML Kit</text>
+  <text x="642" y="643" class="boxText">OCR on each still;</text>
+  <text x="642" y="661" class="boxText">stream: objects, OCR</text>
+  <text x="642" y="679" class="boxText">(watch), glare, blur</text>
+
+  <!-- Settings + Logger -->
+  <rect x="54" y="712" width="350" height="104" rx="12" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="72" y="736" class="boxTitle">Settings</text>
+  <text x="72" y="756" class="boxText">SettingsRepository → flutter_secure_storage</text>
+  <text x="72" y="776" class="boxText">EnvDefaults → assets/env/.env (dev only;</text>
+  <text x="72" y="794" class="boxText">its values override Settings)</text>
+
+  <rect x="416" y="712" width="350" height="104" rx="12" fill="#ffffff" stroke="#c5ccd8"/>
+  <text x="434" y="736" class="boxTitle">TurnLogger (logging/turn_logger.dart)</text>
+  <text x="434" y="756" class="boxText">One JSON entry per turn → local .jsonl file</text>
+  <text x="434" y="776" class="boxText">+ POST to log server (resends if offline)</text>
+  <text x="434" y="794" class="boxText">Text, timings, guards. Never images.</text>
+
+  <!-- internal arrows -->
+  <line x1="410" y1="238" x2="410" y2="252" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="229" y1="320" x2="229" y2="334" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="404" y1="449" x2="414" y2="449" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="591" y1="320" x2="591" y2="334" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <line x1="229" y1="562" x2="229" y2="598" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+  <line x1="591" y1="562" x2="591" y2="598" stroke="#3b4252" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4 3"/>
+
+  <!-- ============ MODEL SERVER ============ -->
+  <rect x="890" y="160" width="360" height="250" rx="22" fill="#eef3ff" stroke="#2f5bd3" stroke-width="2"/>
+  <text x="914" y="192" class="zoneTitle">Model server</text>
+  <text x="914" y="212" class="zoneSub">Any OpenAI-compatible /chat/completions</text>
+  <rect x="914" y="228" width="312" height="74" rx="10" fill="#ffffff" stroke="#9db0ea"/>
+  <text x="930" y="252" class="boxTitle">Study: vLLM on a McGill lab GPU</text>
+  <text x="930" y="272" class="boxText">Qwen/Qwen3.8-27B · images stay at McGill</text>
+  <text x="930" y="290" class="boxText">Required for participant sessions</text>
+  <rect x="914" y="314" width="312" height="74" rx="10" fill="#ffffff" stroke="#9db0ea"/>
+  <text x="930" y="338" class="boxTitle">Development: OpenRouter</text>
+  <text x="930" y="358" class="boxText">qwen/qwen3.8-27b(:free) · test objects only</text>
+  <text x="930" y="376" class="boxText">Free tier is rate-limited (HTTP 429)</text>
+
+  <!-- ============ LOGS ============ -->
+  <rect x="890" y="480" width="360" height="340" rx="22" fill="#eefaf3" stroke="#1f7a4d" stroke-width="2"/>
+  <text x="914" y="512" class="zoneTitle">Study logs (bifrost_logs/)</text>
+  <text x="914" y="532" class="zoneSub">Runs on a lab computer; text only</text>
+  <rect x="914" y="548" width="312" height="110" rx="10" fill="#ffffff" stroke="#8cc7a6"/>
+  <text x="930" y="572" class="boxTitle">Log server (server/server.mjs)</text>
+  <text x="930" y="592" class="boxText">Node, no dependencies, port 8787</text>
+  <text x="930" y="610" class="boxText">POST /api/logs · GET /api/logs, /api/sessions</text>
+  <text x="930" y="628" class="boxText">Stores data/logs.jsonl · rejects images</text>
+  <text x="930" y="646" class="boxText">Optional LOG_TOKEN</text>
+  <rect x="914" y="690" width="312" height="104" rx="10" fill="#ffffff" stroke="#8cc7a6"/>
+  <text x="930" y="714" class="boxTitle">Log viewer (web/, React + Vite)</text>
+  <text x="930" y="734" class="boxText">Sessions · latency vs 2 s / 4 s targets</text>
+  <text x="930" y="752" class="boxText">Confidence mix · guards fired · OCR</text>
+  <text x="930" y="770" class="boxText">Registry · raw model output · live</text>
+  <line x1="1070" y1="688" x2="1070" y2="662" stroke="#1f7a4d" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="1080" y="680" class="edgeSub">GET /api (every 3 s)</text>
+
+  <!-- ============ EXTERNAL ARROWS ============ -->
+  <!-- phone -> model -->
+  <path d="M766 430 C 830 430, 830 290, 886 290" fill="none" stroke="#2f5bd3" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="800" y="226" class="edge" fill="#2f5bd3">Request</text>
+  <text x="800" y="242" class="edgeSub">1 photo +</text>
+  <text x="800" y="257" class="edgeSub">prompt text</text>
+  <!-- model -> phone -->
+  <path d="M886 340 C 846 340, 846 470, 768 470" fill="none" stroke="#2f5bd3" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arrowBlue)"/>
+  <text x="800" y="500" class="edgeSub">streamed</text>
+  <text x="800" y="515" class="edgeSub">JSON (SSE)</text>
+  <!-- phone -> logs -->
+  <path d="M766 764 C 830 764, 830 600, 910 600" fill="none" stroke="#1f7a4d" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="800" y="848" class="edge" fill="#1f7a4d">POST /api/logs</text>
+  <text x="910" y="848" class="edgeSub">one entry per turn · text only, never images</text>
+</svg>

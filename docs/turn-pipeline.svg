@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" width="1280" height="900" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b4252"/>
+    </marker>
+    <marker id="aRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b42318"/>
+    </marker>
+    <marker id="aGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f7a4d"/>
+    </marker>
+    <style>
+      .title { font-size: 26px; font-weight: 700; fill: #1b1f27; }
+      .subtitle { font-size: 14px; fill: #5d6470; }
+      .h { font-size: 14px; font-weight: 700; fill: #1b1f27; }
+      .t { font-size: 12px; fill: #3b4252; }
+      .small { font-size: 11px; fill: #5d6470; }
+      .chipT { font-size: 12.5px; font-weight: 700; fill: #1b1f27; }
+      .chipS { font-size: 11px; fill: #3b4252; }
+      .lane { font-size: 12px; font-weight: 600; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="900" fill="#ffffff"/>
+  <text x="40" y="46" class="title">One BIFROST turn, from button to log</text>
+  <text x="40" y="70" class="subtitle">Blue boxes run on the phone. The orange box is the only network call. Guards run in this exact order (turn_pipeline.dart).</text>
+
+  <!-- Row 1 -->
+  <rect x="40" y="100" width="210" height="80" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="56" y="126" class="h">1 · Listen</text>
+  <text x="56" y="146" class="t">Hold to talk, release to send</text>
+  <text x="56" y="164" class="small">speech_to_text · haptic tick</text>
+
+  <rect x="290" y="100" width="210" height="80" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="306" y="126" class="h">2 · Classify intent</text>
+  <text x="306" y="146" class="t">Local rules, en + fr,</text>
+  <text x="306" y="164" class="small">accent-insensitive (assets/intents)</text>
+
+  <polygon points="640,92 740,140 640,188 540,140" fill="#fff7e6" stroke="#d4a017" stroke-width="1.5"/>
+  <text x="640" y="136" class="h" text-anchor="middle">Needs the</text>
+  <text x="640" y="154" class="h" text-anchor="middle">model?</text>
+
+  <rect x="790" y="100" width="210" height="80" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="806" y="126" class="h">3 · Capture still</text>
+  <text x="806" y="146" class="t">Rear camera; temp file</text>
+  <text x="806" y="164" class="small">deleted right after reading</text>
+
+  <rect x="1040" y="100" width="210" height="80" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="1056" y="126" class="h">4 · Resize + OCR</text>
+  <text x="1056" y="146" class="t">Isolate: 1024 px, JPEG 80</text>
+  <text x="1056" y="164" class="small">ML Kit reads that same image</text>
+
+  <line x1="250" y1="140" x2="286" y2="140" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="500" y1="140" x2="536" y2="140" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="740" y1="140" x2="786" y2="140" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <text x="748" y="130" class="small">yes</text>
+  <line x1="1000" y1="140" x2="1036" y2="140" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- local branch -->
+  <path d="M640 188 L640 228 L145 228 L145 276" fill="none" stroke="#1f7a4d" stroke-width="1.8" marker-end="url(#aGreen)"/>
+  <text x="652" y="214" class="small">no: local intents, a reply to the watch offer, or a pre-check hint (no object, glare)</text>
+
+  <!-- Row 2 -->
+  <rect x="40" y="280" width="210" height="96" rx="12" fill="#eefaf3" stroke="#1f7a4d"/>
+  <text x="56" y="306" class="h">Answer on the phone</text>
+  <text x="56" y="326" class="t">From task memory and the</text>
+  <text x="56" y="344" class="t">last reply. No photo, no</text>
+  <text x="56" y="362" class="t">network, instant.</text>
+
+  <rect x="290" y="280" width="210" height="96" rx="12" fill="#fdecea" stroke="#b42318"/>
+  <text x="306" y="306" class="h">Honest status line</text>
+  <text x="306" y="326" class="t">"The server is busy…",</text>
+  <text x="306" y="344" class="t">"I couldn't get an answer…",</text>
+  <text x="306" y="362" class="t">"Sorry, I lost track…"</text>
+
+  <rect x="540" y="280" width="210" height="96" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="556" y="306" class="h">7 · Validate JSON</text>
+  <text x="556" y="326" class="t">Schema check (freezed).</text>
+  <text x="556" y="344" class="t">Invalid, or not exactly two</text>
+  <text x="556" y="362" class="t">options → retry once</text>
+
+  <rect x="790" y="280" width="210" height="96" rx="12" fill="#fff1e0" stroke="#d97706" stroke-width="2"/>
+  <text x="806" y="306" class="h">6 · Ask the model</text>
+  <text x="806" y="326" class="t">Qwen3.8 via HTTPS, streamed</text>
+  <text x="806" y="344" class="t">temp 0.2 · thinking off</text>
+  <text x="806" y="362" class="small">referent spoken early for ASK/REPAIR</text>
+
+  <rect x="1040" y="280" width="210" height="96" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="1056" y="306" class="h">5 · Build request</text>
+  <text x="1056" y="326" class="t">System prompt + profile,</text>
+  <text x="1056" y="344" class="t">registry, task, OCR text,</text>
+  <text x="1056" y="362" class="t">last 6 turns, intent, photo</text>
+
+  <line x1="1145" y1="180" x2="1145" y2="276" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="1040" y1="328" x2="1004" y2="328" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="790" y1="328" x2="754" y2="328" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <path d="M895 376 L895 400 L395 400 L395 380" fill="none" stroke="#b42318" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#aRed)"/>
+  <text x="905" y="395" class="small" fill="#b42318">429/503 · timeout · no connection</text>
+  <path d="M540 312 L504 312" fill="none" stroke="#b42318" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#aRed)"/>
+  <text x="496" y="272" class="small" fill="#b42318">fails twice</text>
+  <line x1="290" y1="328" x2="254" y2="328" stroke="#b42318" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#aRed)"/>
+
+  <!-- Row 3: guards -->
+  <rect x="40" y="440" width="1210" height="170" rx="16" fill="#f4f6fa" stroke="#9aa3b2"/>
+  <text x="58" y="466" class="h">8 · Guards: enforced in code, not left to the prompt</text>
+  <text x="458" y="466" class="small">each change is recorded as a GuardEvent for the log</text>
+  <line x1="645" y1="376" x2="645" y2="436" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <g>
+    <rect x="58" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="70" y="504" class="chipT">G5 Clarification</text>
+    <text x="70" y="524" class="chipS">Either/or question</text>
+    <text x="70" y="540" class="chipS">needs exactly 2</text>
+    <text x="70" y="556" class="chipS">options</text>
+
+    <rect x="228" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="240" y="504" class="chipT">G6 Stable labels</text>
+    <text x="240" y="524" class="chipS">App owns the registry;</text>
+    <text x="240" y="540" class="chipS">new ids get the next</text>
+    <text x="240" y="556" class="chipS">number, never reused</text>
+
+    <rect x="398" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="410" y="504" class="chipT">G1 Consistency</text>
+    <text x="410" y="524" class="chipS">READ needs read</text>
+    <text x="410" y="540" class="chipS">evidence; NOT_VISIBLE</text>
+    <text x="410" y="556" class="chipS">forces CANT_SEE</text>
+
+    <rect x="568" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#2f5bd3" stroke-width="1.5"/>
+    <text x="580" y="504" class="chipT">G2 OCR check</text>
+    <text x="580" y="524" class="chipS">Claimed text must match</text>
+    <text x="580" y="540" class="chipS">on-device OCR (≥ 0.8),</text>
+    <text x="580" y="556" class="chipS">else READ → THINK</text>
+
+    <rect x="738" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="750" y="504" class="chipT">G3 Challenge</text>
+    <text x="750" y="524" class="chipS">Change the answer only</text>
+    <text x="750" y="540" class="chipS">with OCR-confirmed READ,</text>
+    <text x="750" y="556" class="chipS">else keep the old one</text>
+    <text x="750" y="578" class="small">CHALLENGE turns only</text>
+
+    <rect x="908" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="920" y="504" class="chipT">G4 No guessing</text>
+    <text x="920" y="524" class="chipS">CANT_SEE drops every</text>
+    <text x="920" y="540" class="chipS">identity claim; keeps</text>
+    <text x="920" y="556" class="chipS">referent + action</text>
+
+    <rect x="1078" y="482" width="158" height="110" rx="10" fill="#ffffff" stroke="#c5ccd8"/>
+    <text x="1090" y="504" class="chipT">G7 Banned phrases</text>
+    <text x="1090" y="524" class="chipS">Removes "as you can</text>
+    <text x="1090" y="540" class="chipS">see", "check the label"</text>
+    <text x="1090" y="556" class="chipS">(en + fr)</text>
+
+    <line x1="216" y1="537" x2="226" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="386" y1="537" x2="396" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="556" y1="537" x2="566" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="726" y1="537" x2="736" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="896" y1="537" x2="906" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+    <line x1="1066" y1="537" x2="1076" y2="537" stroke="#3b4252" stroke-width="1.5" marker-end="url(#a)"/>
+  </g>
+
+  <!-- Row 4 -->
+  <rect x="40" y="660" width="210" height="88" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="56" y="686" class="h">9 · Update memory</text>
+  <text x="56" y="706" class="t">Registry identities, task</text>
+  <text x="56" y="724" class="t">done/left, last referent</text>
+
+  <rect x="290" y="660" width="210" height="88" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="306" y="686" class="h">10 · Compose speech</text>
+  <text x="306" y="706" class="t">Templates from .arb files;</text>
+  <text x="306" y="724" class="t">never the model's raw text</text>
+
+  <rect x="540" y="660" width="210" height="88" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="556" y="686" class="h">11 · G8 Length cap</text>
+  <text x="556" y="706" class="t">Over 25 words → extra</text>
+  <text x="556" y="724" class="t">goes to "tell me more"</text>
+
+  <rect x="790" y="660" width="210" height="88" rx="12" fill="#eef3ff" stroke="#2f5bd3"/>
+  <text x="806" y="686" class="h">12 · Speak</text>
+  <text x="806" y="706" class="t">Earcon, then "Jar 2, in your</text>
+  <text x="806" y="724" class="t">right hand. … I read this directly."</text>
+
+  <rect x="1040" y="660" width="210" height="88" rx="12" fill="#eefaf3" stroke="#1f7a4d"/>
+  <text x="1056" y="686" class="h">13 · Log the turn</text>
+  <text x="1056" y="706" class="t">Local .jsonl + POST to the</text>
+  <text x="1056" y="724" class="t">log server. Never images.</text>
+
+  <path d="M1145 610 L1145 630 L145 630 L145 656" fill="none" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="250" y1="704" x2="286" y2="704" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="500" y1="704" x2="536" y2="704" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="750" y1="704" x2="786" y2="704" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+  <line x1="1000" y1="704" x2="1036" y2="704" stroke="#3b4252" stroke-width="1.6" marker-end="url(#a)"/>
+
+  <!-- local lane to speak -->
+  <path d="M40 328 L20 328 L20 800 L895 800 L895 752" fill="none" stroke="#1f7a4d" stroke-width="1.8" marker-end="url(#aGreen)"/>
+  <text x="40" y="792" class="lane" fill="#1f7a4d">Local answers and status lines skip steps 3–11 and go straight to Speak</text>
+
+  <!-- footer -->
+  <text x="40" y="850" class="small">A new press of the button at any point cancels the speech and the turn in flight (dio CancelToken). Only one model turn runs at a time.</text>
+  <text x="40" y="870" class="small">After the answer, a referent box locks vibration guidance and CANT_SEE offers watch mode. Resizing, OCR, detection, glare and blur never block the UI.</text>
+</svg>
